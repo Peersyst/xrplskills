@@ -31,13 +31,13 @@ Map the user's task to the rules to consult before writing code.
 |---|---|
 | "Credit an incoming payment", "deposit handler", "watch for payments" | `security-partial-payment`, `security-validate-meta`, `read-pagination-marker` |
 | "Sign and submit", "send a transaction", "send XRP" | `tx-autofill-before-sign`, `tx-submitandwait`, `security-lastledgersequence`, `tx-handle-tec-codes` |
-| "Set up an exchange deposit address", "custodial account" | `security-validate-destination-tag`, `wallet-regular-key-for-hot-wallets`, `wallet-never-log-seeds` |
-| "Generate a wallet", "key management" | `wallet-secure-entropy`, `wallet-prefer-ed25519`, `wallet-never-log-seeds`, `wallet-regular-key-for-hot-wallets` |
-| "Connect to rippled", "websocket", "reconnect" | `client-singleton`, `client-prefer-websocket`, `client-reconnect-backoff`, `client-explicit-disconnect` |
-| "Balance math", "convert XRP / drops", "IOU value" | `amounts-always-drops`, `amounts-no-float-math`, `amounts-issued-currency-precision` |
+| "Set up an exchange deposit address", "custodial account" | `security-validate-destination-tag`, `wallet-regular-key-for-hot-wallets` |
+| "Generate a wallet", "key management" | `wallet-secure-entropy`, `wallet-prefer-ed25519`, `wallet-regular-key-for-hot-wallets` |
+| "Connect to rippled", "websocket", "reconnect" | `client` |
+| "Balance math", "convert XRP / drops", "IOU value" | `amounts` |
 | "Retry a failed tx", "tec error" | `tx-handle-tec-codes`, `tx-idempotent-retry`, `tx-submitandwait` |
 | "List trust lines / NFTs / offers", "account_lines", "account_objects" | `read-pagination-marker` |
-| "Audit our XRPL integration" | Read all `security-*` rules first, then `amounts-*` and `wallet-*`. |
+| "Audit our XRPL integration" | Read all `security-*` rules first, then `amounts` and `wallet-*`. |
 
 ## Full rule index
 
@@ -50,19 +50,13 @@ Impact tags below match each rule file's frontmatter (`CRITICAL`, `HIGH`, `MEDIU
 - [`security-validate-destination-tag`](rules/security-validate-destination-tag.md) — `CRITICAL` — Honor `requireDestTag` on destination
 
 ### Amounts & numbers
-- [`amounts-always-drops`](rules/amounts-always-drops.md) — `CRITICAL` — Operate in drops; convert to XRP only at the UI boundary
-- [`amounts-no-float-math`](rules/amounts-no-float-math.md) — `CRITICAL` — Never use JS `number` for token arithmetic
-- [`amounts-issued-currency-precision`](rules/amounts-issued-currency-precision.md) — `HIGH` — Issued currencies have a 15-digit mantissa; don't truncate
+- [`amounts`](rules/amounts.md) — `CRITICAL` — Drops + `BigInt` for XRP, `bignumber.js` for IOUs, never JS `number`; respect the 15-digit IOU mantissa
 
 ### Client & connection
-- [`client-singleton`](rules/client-singleton.md) — `HIGH` — One shared `Client` per app, not one per request
-- [`client-prefer-websocket`](rules/client-prefer-websocket.md) — `HIGH` — Use `wss://` over `https://`
-- [`client-explicit-disconnect`](rules/client-explicit-disconnect.md) — `MEDIUM` — Always `await client.disconnect()` in shutdown
-- [`client-reconnect-backoff`](rules/client-reconnect-backoff.md) — `MEDIUM` — Trust the built-in `ConnectionManager`
+- [`client`](rules/client.md) — `HIGH` — One shared `Client` per app, `wss://` over `https://`, trust the built-in reconnect, always disconnect on shutdown
 
 ### Wallet & signing
 - [`wallet-secure-entropy`](rules/wallet-secure-entropy.md) — `CRITICAL` — `Wallet.generate()` only; never hand-rolled entropy
-- [`wallet-never-log-seeds`](rules/wallet-never-log-seeds.md) — `CRITICAL` — Redact `seed` and `privateKey` in logs and error reports
 - [`wallet-prefer-ed25519`](rules/wallet-prefer-ed25519.md) — `MEDIUM` — Default to ed25519
 - [`wallet-regular-key-for-hot-wallets`](rules/wallet-regular-key-for-hot-wallets.md) — `HIGH` — Use `SetRegularKey` so the master key can be disabled
 
@@ -72,6 +66,32 @@ Impact tags below match each rule file's frontmatter (`CRITICAL`, `HIGH`, `MEDIU
 - [`tx-handle-tec-codes`](rules/tx-handle-tec-codes.md) — `HIGH` — Distinguish `tec*` (applied, failed) from `tem*` / `tef*` / `ter*` (not applied)
 - [`tx-idempotent-retry`](rules/tx-idempotent-retry.md) — `HIGH` — Reuse `Sequence` or `Ticket` on retry
 - [`read-pagination-marker`](rules/read-pagination-marker.md) — `MEDIUM` — Loop on `marker` for paginated requests
+
+## Code samples
+
+The rules in this skill explain *what* to do and *why*. When you need a runnable, end-to-end example — how to actually construct, sign, and submit a transaction — go to the [XRPL Developer Portal code samples](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples). They are maintained by XRPLF and stay current with xrpl.js. Prefer them over inventing example code.
+
+| Task | Sample |
+|---|---|
+| Construct and send an XRP payment | [`send-xrp`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/send-xrp) |
+| Add a memo to a payment | [`send-a-memo`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/send-a-memo) |
+| Handle a partial payment safely | [`partial-payment`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/partial-payment) |
+| Watch an account for incoming payments | [`monitor-payments-websocket`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/monitor-payments-websocket) |
+| Submit a transaction with finality and retries | [`reliable-tx-submission`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/reliable-tx-submission), [`submit-and-verify`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/submit-and-verify) |
+| Pre-flight a destination's `requireDestTag` | [`require-destination-tags`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/require-destination-tags) |
+| Walk paginated `account_*` responses | [`markers-and-pagination`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/markers-and-pagination), [`walk-owner-directory`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/walk-owner-directory) |
+| Configure regular keys / disable master | [`assign-regular-key`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/assign-regular-key), [`disable-master-key`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/disable-master-key) |
+| Sign offline / multisign | [`secure-signing`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/secure-signing), [`multisigning`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/multisigning) |
+| Use `Tickets` for parallel submission | [`use-tickets`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/use-tickets) |
+| Issued currencies / IOUs | [`issue-a-token`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/issue-a-token), [`freeze`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/freeze), [`clawback`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/clawback) |
+| AMM | [`create-amm`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/create-amm), [`amm-clob`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/amm-clob) |
+| NFToken | [`non-fungible-token`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/non-fungible-token), [`nft-modular-tutorials`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/nft-modular-tutorials) |
+| MPT (Multi-Purpose Tokens) | [`mpt-generator`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/mpt-generator), [`mpt-sender`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/mpt-sender), [`issue-mpt-with-metadata`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/issue-mpt-with-metadata) |
+| Escrow, Checks, Payment Channels | [`escrow`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/escrow), [`checks`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/checks), [`claim-payment-channel`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/claim-payment-channel) |
+| Credentials, DID | [`credential`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/credential), [`issue-credentials`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/issue-credentials), [`verify-credential`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/verify-credential), [`did`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/did) |
+| Getting started from zero | [`get-started`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/get-started), [`quickstart`](https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples/quickstart) |
+
+When the user asks "how do I send a payment / mint an NFT / set up an escrow" and the answer requires runnable code, fetch the matching sample and adapt it — do not paraphrase the structure from memory.
 
 ## How to use a rule file
 

@@ -70,7 +70,7 @@ The [`xrpl-go`](skills/xrpl-go) skill teaches the agent how to integrate `xrpl-g
 
 Skills for writing application code that talks to the ledger.
 
-- **[xrpl](skills/xrpl/SKILL.md)** — Opinionated rules and security patterns for JavaScript and TypeScript code that uses [xrpl.js](https://github.com/XRPLF/xrpl.js). 20 rules across security, transactions, client lifecycle, wallets, and reads.
+- **[xrpl](skills/xrpl/SKILL.md)** — Opinionated rules and security patterns for JavaScript and TypeScript code that uses [xrpl.js](https://github.com/XRPLF/xrpl.js). Covers security, transactions, client lifecycle, wallets, amounts, and reads.
 - **[xrpl-go](skills/xrpl-go/SKILL.md)** — Reference and patterns for the [Peersyst/xrpl-go](https://github.com/Peersyst/xrpl-go) Go client library. RPC and websocket clients, transactions, wallets, binary codec.
 
 ### Protocol and infrastructure
