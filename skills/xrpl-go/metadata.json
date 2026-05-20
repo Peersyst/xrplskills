@@ -1,0 +1,10 @@
+{
+  "version": "0.1.0",
+  "organization": "Peersyst",
+  "date": "May 2026",
+  "abstract": "Reference and patterns for the Peersyst xrpl-go client library. Covers RPC and WebSocket clients, wallet/key handling, transaction autofill and signing, ledger queries, and the binary codec in Go.",
+  "references": [
+    "https://github.com/Peersyst/xrpl-go",
+    "https://xrpl.org/docs"
+  ]
+}

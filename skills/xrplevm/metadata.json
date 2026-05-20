@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "organization": "Peersyst",
+  "date": "May 2026",
+  "abstract": "Reference for the XRPL EVM sidechain — an EVM-compatible chain bridged to the XRP Ledger via Axelar. Covers network endpoints, Cosmos SDK + EVM architecture, the bridge, Solidity deployment, and EVM wallet configuration.",
+  "references": [
+    "https://docs.xrplevm.org/",
+    "https://github.com/xrplevm",
+    "https://www.axelar.network/"
+  ]
+}
