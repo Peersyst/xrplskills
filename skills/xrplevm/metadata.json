@@ -1,0 +1,141 @@
+{
+  "name": "xrplevm",
+  "version": "0.1.0",
+  "organization": "Peersyst",
+  "date": "2026-05-20",
+  "type": "knowledge",
+  "abstract": "Knowledge skill for the XRPL EVM sidechain — a sovereign Cosmos SDK Layer-1 with EVM execution, XRP as native gas (18 decimals), PoA consensus via CometBFT, bridged to XRPL via Axelar. Covers network endpoints and chain IDs, exrpd node operation, EVM tooling (Hardhat, Foundry, ethers, viem), XRPL-EVM-specific Solidity gotchas, Axelar GMP and ITS bridging (XRP, ERC-20, XRPL IOUs), IBC channels to Cosmos chains, Squid and Skip Go widgets, Band oracles, Goldsky indexing, wallets (MetaMask, Keplr, Reown), and the .xrpl domain ZNS registry. All technical content sourced from docs.xrplevm.org.",
+  "source": "https://docs.xrplevm.org",
+  "references": [
+    {
+      "path": "references/INDEX.md",
+      "title": "Docs Index",
+      "description": "Page-by-page index of docs.xrplevm.org with one-line summaries."
+    },
+    {
+      "path": "references/network/endpoints.md",
+      "title": "Endpoints",
+      "description": "Chain IDs, EVM JSON-RPC, Tendermint RPC, Cosmos REST/gRPC URLs per network."
+    },
+    {
+      "path": "references/network/faucet.md",
+      "title": "Faucet",
+      "description": "Testnet and devnet faucets — faucet.xrplevm.org, Discord, Telegram bot."
+    },
+    {
+      "path": "references/network/block-explorers.md",
+      "title": "Block Explorers",
+      "description": "EVM, Cosmos, and crosschain explorers per network."
+    },
+    {
+      "path": "references/architecture/cosmos-evm-vs-xrplevm.md",
+      "title": "Cosmos EVM vs XRPL EVM",
+      "description": "Stack summary, PoA model, decimal handling, evmOS to Cosmos EVM migration."
+    },
+    {
+      "path": "references/architecture/exrpd-node.md",
+      "title": "exrpd Node",
+      "description": "Node binary, install methods, data layout, ports, mandatory evm-chain-id."
+    },
+    {
+      "path": "references/architecture/exrpd-cli.md",
+      "title": "exrpd CLI Cheatsheet",
+      "description": "Common exrpd commands — keys, query, tx, debug, validator ops."
+    },
+    {
+      "path": "references/architecture/cosmos-layer-interop.md",
+      "title": "Cosmos-EVM Interop",
+      "description": "Address translation (0x ↔ ethm1), Cosmos REST/gRPC, x/erc20 token pairs."
+    },
+    {
+      "path": "references/architecture/precompiles-and-wxrp.md",
+      "title": "XRP Precompile and WXRP",
+      "description": "Sentinel XRP ERC-20 at 0xEee...EEeE, MOAI WXRP fallback, 7-call limit."
+    },
+    {
+      "path": "references/bridge-axelar/overview.md",
+      "title": "Axelar Bridge Overview",
+      "description": "GMP + ITS architecture, deployed contract addresses, AxelarExecutable pattern."
+    },
+    {
+      "path": "references/bridge-axelar/xrp.md",
+      "title": "Bridging XRP via Axelar",
+      "description": "XRP bridging both directions, interchainTransfer example, r-address conversion."
+    },
+    {
+      "path": "references/bridge-axelar/erc20.md",
+      "title": "Bridging ERC-20 via Axelar ITS",
+      "description": "Move ERC-20s between XRPL EVM and other EVM chains via ITS."
+    },
+    {
+      "path": "references/bridge-axelar/iou-bridging.md",
+      "title": "Bridging XRPL IOUs",
+      "description": "Bridge whitelisted IOUs both directions; trustline + approve setup."
+    },
+    {
+      "path": "references/bridge-axelar/iou-registration.md",
+      "title": "IOU Registration with Axelar ITS",
+      "description": "Process for whitelisting and registering an XRPL IOU with ITS."
+    },
+    {
+      "path": "references/bridge-ibc/overview.md",
+      "title": "IBC on XRPL EVM",
+      "description": "Channels to Cosmos Hub, Osmosis, Injective, Elys, Noble; Keplr + CLI flows."
+    },
+    {
+      "path": "references/swap-widgets/squid.md",
+      "title": "Squid Widget",
+      "description": "Embed Squid Router for cross-chain swaps from EVM chains into XRP."
+    },
+    {
+      "path": "references/swap-widgets/skip-go.md",
+      "title": "Skip Go Widget",
+      "description": "Embed Skip Go for IBC-routed swaps from Cosmos chains into XRP."
+    },
+    {
+      "path": "references/tokens/supported.md",
+      "title": "Supported Tokens",
+      "description": "Token catalog by origin: native, XRPL IOU, EVM-bridged, IBC."
+    },
+    {
+      "path": "references/tokens/stablecoins.md",
+      "title": "Stablecoins",
+      "description": "RLUSD testnet address; lookup paths for mainnet stablecoins."
+    },
+    {
+      "path": "references/dapp-dev/evm-tooling.md",
+      "title": "EVM Tooling",
+      "description": "Hardhat, Foundry, ethers.js, viem, web3.js config for XRPL EVM."
+    },
+    {
+      "path": "references/dapp-dev/solidity-on-xrplevm.md",
+      "title": "Solidity on XRPL EVM",
+      "description": "XRPL-EVM-specific Solidity gotchas — Paris fork, 18-decimal XRP, sentinel limits."
+    },
+    {
+      "path": "references/dapp-dev/wallets.md",
+      "title": "Wallet Integration",
+      "description": "MetaMask add-chain, Keplr suggestChain, WalletConnect/Reown setup."
+    },
+    {
+      "path": "references/dapp-dev/social-logins.md",
+      "title": "Social Logins",
+      "description": "Reown AppKit integration; provisional Privy notes."
+    },
+    {
+      "path": "references/dapp-dev/oracles-band.md",
+      "title": "Band Protocol Oracles",
+      "description": "StdReferenceProxy addresses per network, supported feeds, Solidity + JS examples."
+    },
+    {
+      "path": "references/dapp-dev/indexing-goldsky.md",
+      "title": "Indexing with Goldsky",
+      "description": "Subgraphs and Mirror pipelines, GraphQL queries, best practices."
+    },
+    {
+      "path": "references/ecosystem/dapps.md",
+      "title": "dApp Ecosystem",
+      "description": "Pointer to ecosystem.xrplevm.org and suggested catalog schema."
+    }
+  ]
+}
