@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "organization": "Peersyst",
+  "date": "May 2026",
+  "abstract": "Reference and patterns for the xrpl.js JavaScript/TypeScript client library. Covers Client, Wallet, transaction autofill/sign/submit, models, utilities, and common XRPL flows in Node.js and the browser.",
+  "references": [
+    "https://js.xrpl.org/",
+    "https://github.com/XRPLF/xrpl.js",
+    "https://xrpl.org/docs"
+  ]
+}
