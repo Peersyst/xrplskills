@@ -19,44 +19,7 @@ XRPL transaction result codes are grouped by prefix. Most code that wraps a subm
 | `ter*` | Retry (network, queue, sequence gap) | no | no | xrpl.js retries automatically inside `submitAndWait` |
 | `tel*` | Local error (queue full, fee escalation) | no | no | retry with higher fee or wait |
 
-**Incorrect — treating all non-success as the same:**
-
-```ts
-const res = await client.submitAndWait(blob)
-const code = (res.result.meta as any).TransactionResult
-if (code !== 'tesSUCCESS') {
-  // BUG: retrying a tec* with same Sequence will fail with tefPAST_SEQ
-  return retry(blob)
-}
-```
-
-**Correct — branch on the class:**
-
-```ts
-function classify(code: string): 'success' | 'applied-failed' | 'malformed' | 'retry' {
-  if (code === 'tesSUCCESS') return 'success'
-  if (code.startsWith('tec')) return 'applied-failed'
-  if (code.startsWith('tem') || code.startsWith('tef')) return 'malformed'
-  return 'retry'   // ter / tel
-}
-
-const code = (res.result.meta as any).TransactionResult as string
-switch (classify(code)) {
-  case 'success':
-    return markSettled(res.result.hash)
-  case 'applied-failed':
-    // The tx is on-chain but failed. Fee is burned, Sequence consumed.
-    // Surface to the user; do NOT auto-retry.
-    return recordOnChainFailure(res.result.hash, code)
-  case 'malformed':
-    // Bug in our code; alert and stop.
-    throw new Error(`malformed tx: ${code}`)
-  case 'retry':
-    // xrpl.js handles ter* internally inside submitAndWait. If we still see
-    // one here, escalate.
-    throw new Error(`unexpected retry-class code at finality: ${code}`)
-}
-```
+Branch on the result-code class. `tesSUCCESS` is the only success. `tec*` means the transaction is on-chain but failed — surface it; do not auto-retry, because the fee is burned and the sequence is consumed. `tem*` and `tef*` are malformed-transaction errors — fix the inputs and retry with a fresh envelope. `ter*` is handled internally by `submitAndWait`; if you see one at finality, escalate. `tel*` is a local rippled error — back off and retry with a higher fee.
 
 ### Common `tec*` codes you should explicitly recognize
 

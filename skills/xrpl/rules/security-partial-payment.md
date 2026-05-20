@@ -17,42 +17,9 @@ An attacker sends a `Payment` with the `tfPartialPayment` flag set, `Amount: "10
 
 This was the canonical XRPL exchange exploit. It applies to **issued currencies, MPTs, and XRP** alike, and to any flow where you credit an internal balance based on an on-chain payment.
 
-**Incorrect — trusts `Amount`:**
+### The fix
 
-```ts
-client.on('transaction', (event) => {
-  if (event.transaction.TransactionType !== 'Payment') return
-  if (event.transaction.Destination !== EXCHANGE_ADDRESS) return
-  const credited = BigInt(event.transaction.Amount as string)  // BUG
-  creditUser(event.transaction.Account, credited)
-})
-```
-
-**Correct — reads `delivered_amount` from validated meta:**
-
-```ts
-import { getBalanceChanges } from 'xrpl'
-
-client.on('transaction', (event) => {
-  if (!event.validated) return
-  if (event.transaction.TransactionType !== 'Payment') return
-  if (event.transaction.Destination !== EXCHANGE_ADDRESS) return
-
-  // delivered_amount is on the meta object, not the transaction
-  const delivered = (event.meta as any).delivered_amount
-  if (delivered === undefined) return                  // unknown — do not credit
-  if (delivered === 'unavailable') {                   // pre-2014 partial payment
-    flagForManualReview(event.transaction.hash)        // reconstruct from AffectedNodes
-    return
-  }
-  if (typeof delivered === 'string') {
-    creditUser(event.transaction.Account, BigInt(delivered))  // drops
-  } else {
-    // IOU / MPT: { currency, issuer, value }
-    creditIssuedCurrency(event.transaction.Account, delivered)
-  }
-})
-```
+Read `delivered_amount` from the transaction **meta** (not from the transaction body) on every incoming payment, and only after gating on `validated: true`. `delivered_amount` is either a drops string (XRP), an issued-currency object `{ currency, issuer, value }`, or the literal string `"unavailable"` for some pre-2014 partial payments — treat the last case as "do not credit" and reconstruct from `AffectedNodes` if you need the actual amount. xrpl.js exposes `getBalanceChanges(meta)` which abstracts this and is the right primitive when you need every account's balance delta.
 
 ### Notes
 

@@ -27,7 +27,7 @@ import {
 
 // Load the cold seed from an air-gapped or HSM-backed source for the duration
 // of the ceremony only — never from environment variables, env files, or
-// long-lived process memory. See wallet-never-log-seeds.md.
+// long-lived process memory.
 const cold = Wallet.fromSeed(loadColdSeedFromOfflineStorage())
 const hot = Wallet.generate()                                // new hot key
 

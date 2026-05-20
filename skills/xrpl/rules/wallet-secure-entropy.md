@@ -13,46 +13,45 @@ upstream_docs: https://js.xrpl.org/classes/Wallet.html#generate
 **Incorrect — Math.random:**
 
 ```ts
-import { Wallet } from 'xrpl'
+import { Wallet } from "xrpl";
 
-const entropy = Array.from({ length: 16 }, () =>
-  Math.floor(Math.random() * 256)              // BUG: not cryptographic
-)
-const wallet = Wallet.fromEntropy(new Uint8Array(entropy))
+const entropy = Array.from(
+  { length: 16 },
+  () => Math.floor(Math.random() * 256), // BUG: not cryptographic
+);
+const wallet = Wallet.fromEntropy(new Uint8Array(entropy));
 ```
 
 **Incorrect — time + uuid as "extra entropy":**
 
 ```ts
-const seed = sha256(Date.now() + uuid())       // BUG: predictable
+const seed = sha256(Date.now() + uuid()); // BUG: predictable
 ```
 
 **Correct — let xrpl.js do it:**
 
 ```ts
-import { Wallet } from 'xrpl'
+import { Wallet } from "xrpl";
 
-const wallet = Wallet.generate()               // ed25519 by default
-console.log(wallet.address)
-// Persist wallet.seed directly to a secrets manager API — never log it.
-// See: wallet-never-log-seeds.md
+const wallet = Wallet.generate(); // ed25519 by default
+console.log(wallet.address);
 ```
 
 **Correct — explicit secure entropy (e.g. for HD derivation):**
 
 ```ts
-import { Wallet } from 'xrpl'
-import { randomBytes } from 'node:crypto'
+import { Wallet } from "xrpl";
+import { randomBytes } from "node:crypto";
 
-const entropy = randomBytes(16)                // 128 bits, CSPRNG
-const wallet = Wallet.fromEntropy(entropy)
+const entropy = randomBytes(16); // 128 bits, CSPRNG
+const wallet = Wallet.fromEntropy(entropy);
 ```
 
 ### Notes
 
 - `Wallet.generate('ecdsa-secp256k1')` for secp256k1 if you need it; default is ed25519 — see [`wallet-prefer-ed25519`](wallet-prefer-ed25519.md).
 - For mnemonics, use `Wallet.fromMnemonic(...)`. Generate the mnemonic with a vetted BIP-39 library, not a hand-coded wordlist sampler.
-- Seeds are sensitive — see [`wallet-never-log-seeds`](wallet-never-log-seeds.md). Persist them in a secrets manager (AWS Secrets Manager, GCP Secret Manager, Vault, 1Password Connect), never in a database row or env var.
+- Seeds are sensitive. Persist them in a secrets manager (AWS Secrets Manager, GCP Secret Manager, Vault, 1Password Connect), never in a database row, env var, or log line.
 
 ### See also
 
