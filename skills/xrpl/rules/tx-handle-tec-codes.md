@@ -2,6 +2,7 @@
 title: Distinguish tec (applied, failed) from tem/tef/ter (not applied)
 impact: HIGH
 tags: tx, error-handling, result-codes
+xrpl_js_source: https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/sugar/submit.ts
 upstream_docs: https://xrpl.org/transaction-results.html
 ---
 

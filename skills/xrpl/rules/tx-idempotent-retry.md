@@ -2,6 +2,7 @@
 title: Reuse Sequence or Ticket on retry
 impact: HIGH
 tags: tx, idempotency, retry, sequence, tickets
+xrpl_js_source: https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/sugar/submit.ts
 upstream_docs: https://xrpl.org/reliable-transaction-submission.html
 ---
 

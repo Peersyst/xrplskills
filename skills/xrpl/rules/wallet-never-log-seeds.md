@@ -3,6 +3,7 @@ title: Redact seed and privateKey in logs and error reports
 impact: CRITICAL
 tags: wallet, secrets, logging, observability
 xrpl_js_source: https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/Wallet/index.ts
+upstream_docs: https://xrpl.org/cryptographic-keys.html
 ---
 
 ## Redact `seed` and `privateKey` in logs and error reports

@@ -2,6 +2,7 @@
 title: Loop on marker for paginated requests
 impact: MEDIUM
 tags: read, pagination, marker, account-lines, account-objects
+xrpl_js_source: https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/client/index.ts
 upstream_docs: https://xrpl.org/markers-and-pagination.html
 ---
 
