@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "organization": "Peersyst",
+  "date": "May 2026",
+  "abstract": "Raw specification files for all XRPL Standards (XLS-1 through XLS-102), organized by topic. Use when implementing or reviewing any XRPL protocol feature — transactions, ledger objects, amendments, or RPC methods.",
+  "references": [
+    "https://github.com/XRPLF/XRPL-Standards",
+    "https://xrpl.org/known-amendments.html"
+  ]
+}
