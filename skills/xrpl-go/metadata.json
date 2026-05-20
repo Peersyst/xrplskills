@@ -2,9 +2,15 @@
   "version": "0.1.0",
   "organization": "Peersyst",
   "date": "May 2026",
-  "abstract": "Reference and patterns for the Peersyst xrpl-go client library. Covers RPC and WebSocket clients, wallet/key handling, transaction autofill and signing, ledger queries, and the binary codec in Go.",
+  "abstract": "Opinionated rules and security patterns for Go code that uses the Peersyst/xrpl-go client library to interact with the XRP Ledger. Covers security-critical flows (partial payments, validated meta, LastLedgerSequence via Autofill, DestinationTag), amounts and precision, RPC/WebSocket client lifecycle, Wallet and signing, transaction submission, and paginated reads.",
+  "validated_against": {
+    "xrpl_go": "main as of 2026-05-20",
+    "xrpl_go_repo": "https://github.com/Peersyst/xrpl-go"
+  },
   "references": [
+    "https://pkg.go.dev/github.com/Peersyst/xrpl-go",
     "https://github.com/Peersyst/xrpl-go",
+    "https://github.com/Peersyst/xrpl-go/tree/main/examples",
     "https://xrpl.org/docs"
   ]
 }
