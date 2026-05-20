@@ -1,0 +1,21 @@
+{
+  "name": "xrpl-skills",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Agent Skills for the XRP Ledger ecosystem",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peersyst/xrpl-skills"
+  },
+  "workspaces": [
+    "packages/*",
+    "landing"
+  ],
+  "scripts": {
+    "build:skills": "pnpm --filter skills-build build",
+    "test:skills": "pnpm --filter skills-build test",
+    "tokens": "pnpm --filter skills-build tokens"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

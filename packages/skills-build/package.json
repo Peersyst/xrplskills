@@ -1,0 +1,38 @@
+{
+  "name": "skills-build",
+  "version": "1.0.0",
+  "description": "Build tooling for Agent Skills repository",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm build-agents && pnpm extract-tests",
+    "build-agents": "tsx src/build.ts",
+    "build-all": "tsx src/build.ts --all",
+    "build-go-design": "tsx src/build.ts --skill=go-design",
+    "build-go-data": "tsx src/build.ts --skill=go-data",
+    "build-go-errors": "tsx src/build.ts --skill=go-errors",
+    "build-go-concurrency": "tsx src/build.ts --skill=go-concurrency",
+    "build-go-performance": "tsx src/build.ts --skill=go-performance",
+    "validate": "tsx src/validate.ts",
+    "extract-tests": "tsx src/extract-tests.ts",
+    "tokens": "tsx src/token-counter.ts",
+    "tokens:compare": "tsx src/token-counter.ts --compare",
+    "test": "tsx src/test-efficiency.ts",
+    "test:benchmarks": "tsx src/test-efficiency.ts --benchmarks",
+    "test:xrpl-standards": "tsx src/test-xls-parsing.ts",
+    "build:xrpl-standards": "tsx src/build-refs.ts",
+    "dev": "pnpm build && pnpm validate && pnpm test"
+  },
+  "keywords": [
+    "go",
+    "skills",
+    "agents",
+    "llm"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "yaml": "^2.8.2"
+  }
+}

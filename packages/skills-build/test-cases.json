@@ -1,0 +1,314 @@
+[
+  {
+    "ruleId": "",
+    "ruleTitle": "Avoid Unintended Variable Shadowing",
+    "type": "bad",
+    "code": "func LoadConfig() (*Config, error) {\n    config := &Config{Timeout: 30}\n\n    if file, err := os.Open(\"config.json\"); err == nil {\n        defer file.Close()\n        config, err := json.Unmarshal(data, &config)  // Shadows outer 'config'!\n        if err != nil {\n            return nil, err\n        }\n        // This config only exists in this block\n    }\n\n    return config, nil  // Returns partially initialized config!\n}",
+    "language": "go",
+    "description": "Incorrect example for Avoid Unintended Variable Shadowing"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Avoid Unintended Variable Shadowing",
+    "type": "good",
+    "code": "func LoadConfig() (*Config, error) {\n    config := &Config{Timeout: 30}\n\n    file, err := os.Open(\"config.json\")\n    if err == nil {\n        defer file.Close()\n        err = json.Unmarshal(data, config)  // Uses outer 'config'\n        if err != nil {\n            return nil, err\n        }\n    }\n\n    return config, nil\n}",
+    "language": "go",
+    "description": "Why this matters: The incorrect version creates a new `config` variable inside the if block that shadows the outer one. Changes to this shadowed variable don't affect the outer `config`, so the function returns the partially initialized default config instead of the loaded one.\n\nPrevention: Use `go vet` which detects some shadowing cases. Consider shorter scopes and unique variable names. The `:=` operator is convenient but dangerous in nested scopes—sometimes explicit `var` declarations make shadowing more obvious."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Always Handle Context Cancellation",
+    "type": "bad",
+    "code": "func FetchData(ctx context.Context, urls []string) []Result {\n    results := make([]Result, len(urls))\n    for i, url := range urls {\n        // Ignores context cancellation!\n        resp, _ := http.Get(url)\n        results[i] = process(resp)\n    }\n    return results\n}",
+    "language": "go",
+    "description": "Incorrect example for Always Handle Context Cancellation"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Always Handle Context Cancellation",
+    "type": "good",
+    "code": "func FetchData(ctx context.Context, urls []string) ([]Result, error) {\n    results := make([]Result, len(urls))\n    for i, url := range urls {\n        select {\n        case <-ctx.Done():\n            return nil, ctx.Err()  // Stop early if context cancelled\n        default:\n        }\n\n        req, _ := http.NewRequestWithContext(ctx, \"GET\", url, nil)\n        resp, err := http.DefaultClient.Do(req)\n        if err != nil {\n            return nil, err\n        }\n        results[i] = process(resp)\n    }\n    return results, nil\n}",
+    "language": "go",
+    "description": "Why this matters: When an HTTP request is cancelled (user navigates away) or times out, continuing to fetch remaining URLs wastes resources. Context cancellation propagates through `http.NewRequestWithContext()` and checking `ctx.Done()` lets you stop immediately. Ignoring this causes slow responses and resource leaks."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Protect Shared State with Mutexes or Channels",
+    "type": "bad",
+    "code": "type Counter struct {\n    count int\n}\n\nfunc (c *Counter) Increment() {\n    c.count++  // Race condition!\n}\n\nfunc main() {\n    counter := &Counter{}\n    for i := 0; i < 1000; i++ {\n        go counter.Increment()\n    }\n}",
+    "language": "go",
+    "description": "Incorrect example for Protect Shared State with Mutexes or Channels"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Protect Shared State with Mutexes or Channels",
+    "type": "good",
+    "code": "type Counter struct {\n    mu    sync.Mutex\n    count int\n}\n\nfunc (c *Counter) Increment() {\n    c.mu.Lock()\n    defer c.mu.Unlock()\n    c.count++\n}",
+    "language": "go",
+    "description": "using Mutex"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Protect Shared State with Mutexes or Channels",
+    "type": "good",
+    "code": "type Counter struct {\n    ops chan func(*int)\n}\n\nfunc NewCounter() *Counter {\n    c := &Counter{ops: make(chan func(*int))}\n    go func() {\n        count := 0\n        for op := range c.ops {\n            op(&count)\n        }\n    }()\n    return c\n}\n\nfunc (c *Counter) Increment() {\n    c.ops <- func(count *int) { *count++ }\n}",
+    "language": "go",
+    "description": "using Channels"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Prevent Goroutine Leaks with Context or Channels",
+    "type": "bad",
+    "code": "func StartWorker(jobs <-chan Job) {\n    go func() {\n        for job := range jobs {\n            process(job)\n        }\n    }()\n    // Goroutine has no way to be stopped\n    // If jobs channel is never closed, this leaks forever\n}",
+    "language": "go",
+    "description": "Incorrect example for Prevent Goroutine Leaks with Context or Channels"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Prevent Goroutine Leaks with Context or Channels",
+    "type": "good",
+    "code": "func StartWorker(ctx context.Context, jobs <-chan Job) {\n    go func() {\n        for {\n            select {\n            case <-ctx.Done():\n                // Graceful shutdown when context is cancelled\n                return\n            case job, ok := <-jobs:\n                if !ok {\n                    // Channel closed, exit cleanly\n                    return\n                }\n                process(job)\n            }\n        }\n    }()\n}",
+    "language": "go",
+    "description": "Why this matters: In a long-running server, goroutine leaks cause memory growth that eventually crashes your application. Each leaked goroutine holds its stack (minimum 2KB) and any referenced memory. With thousands of requests, this adds up fast.\n\nPattern: Use `context.Context` for cancellation, always check channel closure with `job, ok := <-ch`, and ensure every goroutine has a clear exit path. Test with `go test -race` to catch goroutine issues."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Understand Nil Channel Behavior",
+    "type": "bad",
+    "code": "func merge(ch1, ch2 <-chan int) <-chan int {\n    out := make(chan int)\n    go func() {\n        defer close(out)\n        for {\n            select {\n            case v := <-ch1:  // If ch1 is nil, blocks forever!\n                out <- v\n            case v := <-ch2:\n                out <- v\n            }\n        }\n    }()\n    return out\n}",
+    "language": "go",
+    "description": "Incorrect example for Understand Nil Channel Behavior"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Understand Nil Channel Behavior",
+    "type": "good",
+    "code": "func merge(ch1, ch2 <-chan int) <-chan int {\n    out := make(chan int)\n    go func() {\n        defer close(out)\n        for ch1 != nil || ch2 != nil {\n            select {\n            case v, ok := <-ch1:\n                if !ok {\n                    ch1 = nil  // Disable this case\n                    continue\n                }\n                out <- v\n            case v, ok := <-ch2:\n                if !ok {\n                    ch2 = nil  // Disable this case\n                    continue\n                }\n                out <- v\n            }\n        }\n    }()\n    return out\n}",
+    "language": "go",
+    "description": "Why this matters: Setting a channel to `nil` makes select ignore that case, allowing graceful shutdown when one channel closes. Without this, select would continuously receive zero values from the closed channel."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Avoid defer in Tight Loops",
+    "type": "bad",
+    "code": "func ProcessFiles(paths []string) error {\n    for _, path := range paths {\n        file, err := os.Open(path)\n        if err != nil {\n            return err\n        }\n        defer file.Close()  // All defers execute at function return!\n        // Process file...\n    }\n    return nil\n    // All files stay open until here\n}",
+    "language": "go",
+    "description": "Incorrect example for Avoid defer in Tight Loops"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Avoid defer in Tight Loops",
+    "type": "good",
+    "code": "func ProcessFiles(paths []string) error {\n    for _, path := range paths {\n        if err := processFile(path); err != nil {\n            return err\n        }\n    }\n    return nil\n}\n\nfunc processFile(path string) error {\n    file, err := os.Open(path)\n    if err != nil {\n        return err\n    }\n    defer file.Close()  // Executes when processFile returns\n    // Process file...\n    return nil\n}",
+    "language": "go",
+    "description": "Correct example for Avoid defer in Tight Loops"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Don't Store Pointers to Range Loop Variables",
+    "type": "bad",
+    "code": "func CollectUsers(names []string) []*User {\n    var users []*User\n    for _, name := range names {\n        user := User{Name: name}\n        users = append(users, &user)  // All point to same variable!\n    }\n    return users  // All users have the last name!\n}",
+    "language": "go",
+    "description": "Incorrect example for Don't Store Pointers to Range Loop Variables"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Don't Store Pointers to Range Loop Variables",
+    "type": "good",
+    "code": "func CollectUsers(names []string) []*User {\n    users := make([]*User, 0, len(names))\n    for _, name := range names {\n        user := User{Name: name}\n        users = append(users, &user)  // Creates new user each iteration\n    }\n    return users\n}\n\n// Or better - use index:\nfunc CollectUsers(names []string) []*User {\n    users := make([]*User, len(names))\n    for i := range names {\n        users[i] = &User{Name: names[i]}\n    }\n    return users\n}",
+    "language": "go",
+    "description": "Why this matters: This bug is subtle and common. The range loop reuses the same `user` variable for each iteration. Taking `&user` gives you the address of this shared variable, so all your pointers end up pointing to it. After the loop, it contains the last value, making all pointers reference the same data.\n\nSolution: Declare variables inside the loop body (as shown in Correct version 1), use the index to access the original slice, or in Go 1.22+, the loop variable is implicitly copied per iteration. Always use the `-race` flag during testing to catch these issues."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Check for Integer Overflow in Critical Operations",
+    "type": "bad",
+    "code": "func AllocateBuffer(count int32, size int32) []byte {\n    total := count * size  // Can overflow!\n    return make([]byte, total)\n}\n\n// AllocateBuffer(1000000, 5000) overflows int32, wraps to negative,\n// then make() panics with negative size",
+    "language": "go",
+    "description": "Incorrect example for Check for Integer Overflow in Critical Operations"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Check for Integer Overflow in Critical Operations",
+    "type": "good",
+    "code": "func AllocateBuffer(count int32, size int32) ([]byte, error) {\n    if count > 0 && size > math.MaxInt32/count {\n        return nil, fmt.Errorf(\"buffer size overflow: %d * %d\", count, size)\n    }\n\n    total := int64(count) * int64(size)\n    if total > math.MaxInt32 {\n        return nil, fmt.Errorf(\"buffer too large: %d bytes\", total)\n    }\n\n    return make([]byte, total), nil\n}",
+    "language": "go",
+    "description": "Why this matters: Overflow bugs cause security vulnerabilities (buffer overflows), financial errors (incorrect totals), and resource exhaustion (negative or wrapped values). These bugs are subtle because Go doesn't warn you.\n\nDetection: Use `int64` for calculations involving multiplication or addition of user input. Check bounds before operations when using smaller integer types. Consider using `math/big` for arbitrary precision when needed."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Understand Slice Length vs Capacity",
+    "type": "bad",
+    "code": "func ProcessBatch(items []int) []int {\n    results := make([]int, 10)  // Length 10, capacity 10\n    for i, item := range items {\n        results[i] = item * 2  // Panics if len(items) > 10!\n    }\n    return results\n}",
+    "language": "go",
+    "description": "Incorrect example for Understand Slice Length vs Capacity"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Understand Slice Length vs Capacity",
+    "type": "good",
+    "code": "func ProcessBatch(items []int) []int {\n    results := make([]int, 0, len(items))  // Length 0, capacity len(items)\n    for _, item := range items {\n        results = append(results, item*2)  // Safe, preallocated\n    }\n    return results\n}",
+    "language": "go",
+    "description": "Why this matters: `make([]T, n)` creates a slice with `n` zero elements. `make([]T, 0, n)` creates an empty slice with space for `n` elements. The first form causes index-out-of-bounds panics or overwrites zeros. Slicing operations also preserve the underlying array—slicing `s[0:5]` from a 100-element slice still references all 100 elements, preventing garbage collection.\n\nPattern: Use `make([]T, 0, n)` when building slices with append. Use `make([]T, n)` when setting elements by index. Be aware that `slice[i:j]` shares the backing array with the original slice."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Never Ignore Error Return Values",
+    "type": "bad",
+    "code": "func SaveUser(user User) {\n    data, _ := json.Marshal(user)  // Ignoring error\n    file.Write(data)                // Ignoring error\n    file.Close()                    // Ignoring error\n}",
+    "language": "go",
+    "description": "Incorrect example for Never Ignore Error Return Values"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Never Ignore Error Return Values",
+    "type": "good",
+    "code": "func SaveUser(user User) error {\n    data, err := json.Marshal(user)\n    if err != nil {\n        return fmt.Errorf(\"failed to marshal user: %w\", err)\n    }\n\n    if err := file.Write(data); err != nil {\n        return fmt.Errorf(\"failed to write data: %w\", err)\n    }\n\n    if err := file.Close(); err != nil {\n        return fmt.Errorf(\"failed to close file: %w\", err)\n    }\n\n    return nil\n}",
+    "language": "go",
+    "description": "Why this matters: The incorrect version silently fails if JSON marshaling fails (e.g., circular reference) or if disk is full. The correct version propagates errors to the caller, allowing proper error handling and recovery. In production, this difference is between mysterious data loss and clear error reporting.\n\nNote: If you genuinely need to ignore an error (rare cases like defer file.Close() when you've already successfully read), use explicit blank assignment `_ = file.Close()` to signal intent to code reviewers."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use Panic Only for Unrecoverable Errors",
+    "type": "bad",
+    "code": "func LoadConfig(path string) *Config {\n    data, err := os.ReadFile(path)\n    if err != nil {\n        panic(err)  // Don't panic on expected errors!\n    }\n\n    var cfg Config\n    if err := json.Unmarshal(data, &cfg); err != nil {\n        panic(err)  // Crashes the whole program\n    }\n    return &cfg\n}",
+    "language": "go",
+    "description": "Incorrect example for Use Panic Only for Unrecoverable Errors"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use Panic Only for Unrecoverable Errors",
+    "type": "good",
+    "code": "func LoadConfig(path string) (*Config, error) {\n    data, err := os.ReadFile(path)\n    if err != nil {\n        return nil, fmt.Errorf(\"reading config: %w\", err)\n    }\n\n    var cfg Config\n    if err := json.Unmarshal(data, &cfg); err != nil {\n        return nil, fmt.Errorf(\"parsing config: %w\", err)\n    }\n    return &cfg, nil\n}",
+    "language": "go",
+    "description": "Why this matters: Panic terminates the program (or goroutine) immediately unless recovered. File not found, invalid JSON, and network errors are expected failures that callers should handle. Panic makes your code unusable as a library and prevents graceful error handling.\n\nWhen to panic: Programming errors (e.g., `nil` pointer bugs you should fix), impossible states that indicate broken invariants, or initialization failures in `init()` where error returns aren't possible. Even then, consider whether `log.Fatal` is more appropriate."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use errors.Is and errors.As for Error Type Checking",
+    "type": "bad",
+    "code": "func HandleError(err error) {\n    if err == os.ErrNotExist {  // Fails if error is wrapped!\n        // Handle missing file\n    }\n\n    if _, ok := err.(*json.SyntaxError); ok {  // Fails with wrapping!\n        // Handle JSON error\n    }\n}",
+    "language": "go",
+    "description": "Incorrect example for Use errors.Is and errors.As for Error Type Checking"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use errors.Is and errors.As for Error Type Checking",
+    "type": "good",
+    "code": "func HandleError(err error) {\n    if errors.Is(err, os.ErrNotExist) {  // Works with wrapped errors\n        // Handle missing file\n    }\n\n    var syntaxErr *json.SyntaxError\n    if errors.As(err, &syntaxErr) {  // Works with wrapped errors\n        // Handle JSON error, can access syntaxErr fields\n    }\n}",
+    "language": "go",
+    "description": "Why this matters: When you wrap errors with `fmt.Errorf(\"%w\", err)`, direct comparisons fail because the error is now a different type. `errors.Is()` unwraps the error chain to find matches. `errors.As()` finds the first error in the chain that matches the target type and assigns it, giving you access to type-specific fields."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Wrap Errors with Context Using %w",
+    "type": "bad",
+    "code": "func LoadConfig(path string) (*Config, error) {\n    data, err := os.ReadFile(path)\n    if err != nil {\n        return nil, err  // No context about what failed\n    }\n\n    var cfg Config\n    err = json.Unmarshal(data, &cfg)\n    if err != nil {\n        return nil, errors.New(\"unmarshal failed\")  // Lost original error\n    }\n\n    return &cfg, nil\n}",
+    "language": "go",
+    "description": "Incorrect example for Wrap Errors with Context Using %w"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Wrap Errors with Context Using %w",
+    "type": "good",
+    "code": "func LoadConfig(path string) (*Config, error) {\n    data, err := os.ReadFile(path)\n    if err != nil {\n        return nil, fmt.Errorf(\"reading config file %q: %w\", path, err)\n    }\n\n    var cfg Config\n    if err := json.Unmarshal(data, &cfg); err != nil {\n        return nil, fmt.Errorf(\"parsing config JSON: %w\", err)\n    }\n\n    return &cfg, nil\n}",
+    "language": "go",
+    "description": "Why this matters: The incorrect version returns cryptic errors like \"no such file\" without context. The correct version returns \"reading config file '/etc/app.conf': no such file or directory\", making debugging trivial. The `%w` verb allows callers to check for specific error types: `if errors.Is(err, os.ErrNotExist)`.\n\nBest practice: Include variable values (like file paths) in error messages to aid debugging, but avoid including sensitive data like passwords or tokens."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use Consistent, Short Receiver Names",
+    "type": "bad",
+    "code": "type User struct {\n    Name string\n}\n\nfunc (this *User) GetName() string {  // \"this\" is not idiomatic\n    return this.Name\n}\n\nfunc (user *User) SetName(name string) {  // Inconsistent with GetName\n    user.Name = name\n}\n\nfunc (u *User) Validate() error {  // Another inconsistent name\n    if u.Name == \"\" {\n        return errors.New(\"name required\")\n    }\n    return nil\n}",
+    "language": "go",
+    "description": "Incorrect example for Use Consistent, Short Receiver Names"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use Consistent, Short Receiver Names",
+    "type": "good",
+    "code": "type User struct {\n    Name string\n}\n\nfunc (u *User) GetName() string {\n    return u.Name\n}\n\nfunc (u *User) SetName(name string) {\n    u.Name = name\n}\n\nfunc (u *User) Validate() error {\n    if u.Name == \"\" {\n        return errors.New(\"name required\")\n    }\n    return nil\n}",
+    "language": "go",
+    "description": "Why this matters: Consistent receiver names make code easier to scan and understand. Go convention is to use the first letter(s) of the type name: `User` → `u`, `HTTPClient` → `c` or `hc`, `ResponseWriter` → `w`. This is immediately recognizable to Go developers.\n\nGuidelines:\n\n- Use 1-2 characters (usually first letter of type)\n\n- Be consistent across ALL methods of the type\n\n- Avoid `this`, `self`, or full words\n\n- For types with same first letter, use 2 characters: `HTTPClient` → `hc`\n\nCode review: If you see varying receiver names in a type's methods, standardize them in one pass."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Preallocate Slices When Size is Known",
+    "type": "bad",
+    "code": "func ProcessItems(items []Item) []Result {\n    var results []Result  // Starts with capacity 0\n    for _, item := range items {\n        result := process(item)\n        results = append(results, result)  // May reallocate multiple times\n    }\n    return results\n}",
+    "language": "go",
+    "description": "Incorrect example for Preallocate Slices When Size is Known"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Preallocate Slices When Size is Known",
+    "type": "good",
+    "code": "func ProcessItems(items []Item) []Result {\n    results := make([]Result, 0, len(items))  // Preallocate capacity\n    for _, item := range items {\n        result := process(item)\n        results = append(results, result)  // No reallocation needed\n    }\n    return results\n}",
+    "language": "go",
+    "description": "Why this matters: Each time a slice grows beyond capacity, Go allocates a new larger array and copies all existing elements. For 1000 items, the incorrect version may allocate 10+ times. The correct version allocates once, saving both CPU time and reducing garbage collection pressure.\n\nBenchmark impact: For large slices (10,000+ elements), preallocation can be 2-5x faster and reduce allocations by an order of magnitude. Always preallocate when converting one slice type to another or accumulating results.\n\nAlternative: If you know the exact size, use `make([]Result, len(items))` and index directly instead of append."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use strings.Builder for Efficient String Concatenation",
+    "type": "bad",
+    "code": "func BuildQuery(fields []string) string {\n    query := \"SELECT \"\n    for i, field := range fields {\n        if i > 0 {\n            query += \", \"  // New allocation every iteration!\n        }\n        query += field\n    }\n    query += \" FROM table\"\n    return query\n}",
+    "language": "go",
+    "description": "Incorrect example for Use strings.Builder for Efficient String Concatenation"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use strings.Builder for Efficient String Concatenation",
+    "type": "good",
+    "code": "func BuildQuery(fields []string) string {\n    var b strings.Builder\n    b.WriteString(\"SELECT \")\n    for i, field := range fields {\n        if i > 0 {\n            b.WriteString(\", \")\n        }\n        b.WriteString(field)\n    }\n    b.WriteString(\" FROM table\")\n    return b.String()\n}",
+    "language": "go",
+    "description": "Why this matters: String concatenation with `+` copies both strings into a new allocation. With n fields, the incorrect version makes O(n²) allocations and copies. `strings.Builder` grows a single buffer, resulting in O(n) performance. For large strings or loops, this is significantly faster and reduces GC pressure.\n\nWhen to use: Any loop concatenating strings, building responses, or constructing large strings. For 2-3 simple concatenations, `+` is fine and more readable."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Always Set HTTP Client Timeouts",
+    "type": "bad",
+    "code": "func FetchData(url string) ([]byte, error) {\n    resp, err := http.Get(url)  // Uses default client - no timeout!\n    if err != nil {\n        return nil, err\n    }\n    defer resp.Body.Close()\n    return io.ReadAll(resp.Body)\n}",
+    "language": "go",
+    "description": "Incorrect example for Always Set HTTP Client Timeouts"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Always Set HTTP Client Timeouts",
+    "type": "good",
+    "code": "var httpClient = &http.Client{\n    Timeout: 10 * time.Second,\n    Transport: &http.Transport{\n        DialContext: (&net.Dialer{\n            Timeout:   5 * time.Second,\n        }).DialContext,\n        TLSHandshakeTimeout:   5 * time.Second,\n        ResponseHeaderTimeout: 5 * time.Second,\n    },\n}\n\nfunc FetchData(url string) ([]byte, error) {\n    resp, err := httpClient.Get(url)\n    if err != nil {\n        return nil, err\n    }\n    defer resp.Body.Close()\n    return io.ReadAll(resp.Body)\n}",
+    "language": "go",
+    "description": "Why this matters: Without timeouts, slow servers cause goroutines to hang indefinitely. In production, this leads to goroutine leaks, memory exhaustion, and cascading failures. Set `Client.Timeout` for overall request timeout and `Transport` timeouts for finer control over connection, TLS handshake, and response header phases."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Always Use the Race Detector in Tests",
+    "type": "bad",
+    "code": "// Running tests without race detection\n$ go test ./...",
+    "language": "go",
+    "description": "Incorrect example for Always Use the Race Detector in Tests"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Always Use the Race Detector in Tests",
+    "type": "good",
+    "code": "// Always run with race detector\n$ go test -race ./...\n\n// In CI/CD pipelines\ngo test -race -timeout 10m ./...\n\n// For specific packages with known goroutines\ngo test -race -v ./internal/worker",
+    "language": "go",
+    "description": "Why this matters: Race conditions are non-deterministic—they may not appear in normal test runs but manifest in production under load. The race detector instruments your code to detect concurrent access to shared memory. While it adds overhead (typically 10x slower, uses 10x more memory), catching races during development prevents production incidents.\n\nBest practice: Run `-race` in CI pipelines. Include it in pre-commit hooks for critical packages. Accept the performance hit during testing—it's worth it. Note that the race detector only finds races that actually execute during the test, so good test coverage is essential."
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use Table-Driven Tests for Multiple Cases",
+    "type": "bad",
+    "code": "func TestAdd(t *testing.T) {\n    result := Add(2, 3)\n    if result != 5 {\n        t.Errorf(\"Add(2, 3) = %d; want 5\", result)\n    }\n\n    result = Add(0, 0)\n    if result != 0 {\n        t.Errorf(\"Add(0, 0) = %d; want 0\", result)\n    }\n\n    result = Add(-1, 1)\n    if result != 0 {\n        t.Errorf(\"Add(-1, 1) = %d; want 0\", result)\n    }\n    // Lots of duplication...\n}",
+    "language": "go",
+    "description": "Incorrect example for Use Table-Driven Tests for Multiple Cases"
+  },
+  {
+    "ruleId": "",
+    "ruleTitle": "Use Table-Driven Tests for Multiple Cases",
+    "type": "good",
+    "code": "func TestAdd(t *testing.T) {\n    tests := []struct {\n        name string\n        a, b int\n        want int\n    }{\n        {name: \"positive numbers\", a: 2, b: 3, want: 5},\n        {name: \"zeros\", a: 0, b: 0, want: 0},\n        {name: \"negative and positive\", a: -1, b: 1, want: 0},\n        {name: \"large numbers\", a: 1000, b: 2000, want: 3000},\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got := Add(tt.a, tt.b)\n            if got != tt.want {\n                t.Errorf(\"Add(%d, %d) = %d; want %d\",\n                    tt.a, tt.b, got, tt.want)\n            }\n        })\n    }\n}",
+    "language": "go",
+    "description": "Why this matters: Table-driven tests reduce duplication, make it easy to add new test cases (just add a struct), and provide clear test names. When a test fails, you immediately know which case failed. They also work well with `t.Run()` for subtests.\n\nBenefits:\n\n- Adding new test cases is trivial (one line)\n\n- Test output shows which specific case failed\n\n- Easy to run individual cases: `go test -run TestAdd/zeros`\n\n- Less code to maintain\n\nPattern: Define a slice of test case structs with inputs, expected outputs, and descriptive names. Loop through and run each as a subtest with `t.Run()`."
+  }
+]
