@@ -77,7 +77,7 @@ Impact tags below match each rule file's frontmatter (`CRITICAL`, `HIGH`, `MEDIU
 
 Once you have picked a rule from the table above, read its file:
 
-```
+```text
 Read <skill-dir>/rules/<rule-name>.md
 ```
 

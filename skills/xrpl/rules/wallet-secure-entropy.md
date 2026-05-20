@@ -34,7 +34,8 @@ import { Wallet } from 'xrpl'
 
 const wallet = Wallet.generate()               // ed25519 by default
 console.log(wallet.address)
-console.log(wallet.seed)                       // store in a secret manager
+// Persist wallet.seed directly to a secrets manager API — never log it.
+// See: wallet-never-log-seeds.md
 ```
 
 **Correct — explicit secure entropy (e.g. for HD derivation):**

@@ -25,7 +25,10 @@ import {
   Wallet,
 } from 'xrpl'
 
-const cold = Wallet.fromSeed(process.env.COLD_SEED!)         // offline ceremony
+// Load the cold seed from an air-gapped or HSM-backed source for the duration
+// of the ceremony only — never from environment variables, env files, or
+// long-lived process memory. See wallet-never-log-seeds.md.
+const cold = Wallet.fromSeed(loadColdSeedFromOfflineStorage())
 const hot = Wallet.generate()                                // new hot key
 
 // 1. Designate the hot key as the regular key.
@@ -79,4 +82,4 @@ await client.submitAndWait(signed.tx_blob)
 ### See also
 
 - xrpl.js: [`models/transactions/setRegularKey.ts`](https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/setRegularKey.ts), [`models/transactions/accountSet.ts`](https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/accountSet.ts)
-- Protocol: https://xrpl.org/setregularkey.html, https://xrpl.org/cryptographic-keys.html
+- Protocol: https://xrpl.org/setregularkey.html, https://xrpl.org/docs/concepts/accounts/cryptographic-keys

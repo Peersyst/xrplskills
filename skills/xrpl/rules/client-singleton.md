@@ -41,7 +41,11 @@ let connecting: Promise<void> | null = null
 
 export async function getClient(): Promise<Client> {
   if (client.isConnected()) return client
-  connecting ??= client.connect()
+  // Reset the cached promise on failure so the next caller can retry.
+  // Without this, a single connect rejection poisons all future getClient() calls.
+  connecting ??= client.connect().finally(() => {
+    connecting = null
+  })
   await connecting
   return client
 }

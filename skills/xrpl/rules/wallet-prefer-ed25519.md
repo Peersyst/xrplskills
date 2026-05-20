@@ -3,7 +3,7 @@ title: Default to ed25519
 impact: MEDIUM
 tags: wallet, cryptography, ed25519, secp256k1
 xrpl_js_source: https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/ECDSA.ts
-upstream_docs: https://xrpl.org/cryptographic-keys.html
+upstream_docs: https://xrpl.org/docs/concepts/accounts/cryptographic-keys
 ---
 
 ## Default to ed25519
@@ -52,4 +52,4 @@ const wallet = Wallet.generate('ecdsa-secp256k1')               // interop case
 ### See also
 
 - xrpl.js: [`ECDSA.ts`](https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/ECDSA.ts), [`ripple-keypairs`](https://github.com/XRPLF/xrpl.js/tree/main/packages/ripple-keypairs)
-- Protocol: https://xrpl.org/cryptographic-keys.html
+- Protocol: https://xrpl.org/docs/concepts/accounts/cryptographic-keys

@@ -10,7 +10,7 @@ upstream_docs: https://xrpl.org/basic-data-types.html#specifying-currency-amount
 
 JavaScript `number` is IEEE-754 double-precision float. It can exactly represent integers up to `2^53 - 1` (≈ 9.007 × 10¹⁵). The total XRP supply in drops is **10¹⁷**. So `Number.MAX_SAFE_INTEGER` is already too small to hold an XRP balance, and any decimal arithmetic introduces rounding immediately (`0.1 + 0.2 === 0.30000000000000004`).
 
-For all amount math, use `BigInt` (for drops) or a decimal library like `bignumber.js` (for issued-currency `value`).
+For all amount math, use `BigInt` (for drops) or `bignumber.js` (for issued-currency `value`). `bignumber.js` is the standard choice across the XRPL ecosystem — match it, do not substitute another decimal library.
 
 **Incorrect — Number for XRP drops:**
 
@@ -37,7 +37,7 @@ const fee = BigInt(prepared.Fee)
 const remaining = balance - fee
 ```
 
-**Correct — bignumber.js (or built-in `Intl` decimal in newer envs) for issued currency:**
+**Correct — `bignumber.js` for issued currency:**
 
 ```ts
 import BigNumber from 'bignumber.js'
@@ -53,7 +53,7 @@ const tx: Payment = {
 
 ### Notes
 
-- xrpl.js does not bundle a decimal library; bring your own (`bignumber.js`, `decimal.js`, or the newer ES `Intl.NumberFormat` + integer-mantissa pattern).
+- xrpl.js does not bundle a decimal library; install `bignumber.js`. This is the standard across the XRPL ecosystem — match it, do not substitute another decimal library. Browser/Node `Intl.NumberFormat` is a formatting API only and is not a decimal arithmetic library; use it for the final UI string, never for math.
 - `BigInt` cannot represent fractional values — use it only for drops and MPT counts, never for IOU balances.
 - Never cast a `BigInt` to `Number` in a code path that touches balances. If you need a UI string, use `BigInt#toString()` then `dropsToXrp`.
 - JSON does not have a BigInt type. When marshalling to/from rippled, the protocol uses **strings** for amounts; preserve that.

@@ -41,6 +41,10 @@ client.on('transaction', (event) => {
   // delivered_amount is on the meta object, not the transaction
   const delivered = (event.meta as any).delivered_amount
   if (delivered === undefined) return                  // unknown — do not credit
+  if (delivered === 'unavailable') {                   // pre-2014 partial payment
+    flagForManualReview(event.transaction.hash)        // reconstruct from AffectedNodes
+    return
+  }
   if (typeof delivered === 'string') {
     creditUser(event.transaction.Account, BigInt(delivered))  // drops
   } else {
