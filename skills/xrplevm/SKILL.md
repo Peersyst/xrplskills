@@ -95,7 +95,7 @@ Common locations:
 ### dapp-dev/
 
 - `evm-tooling.md` — Hardhat / Foundry / ethers / viem / web3.js setup; `customChains` for `hardhat-verify` against Blockscout; `evmVersion: prague`; viem `defineChain` for mainnet until viem ships `xrplevm`; devnet RPC now public.
-- `solidity-on-xrplevm.md` — Solidity gotchas on XRPL EVM: 18-decimal XRP vs 6 drops on XRPL, `axrp` ↔ drops conversion, Prague fork target since `exrpd` v9, sentinel ERC-20 call limits, address translation from contracts.
+- `solidity-on-xrplevm.md` — Solidity gotchas on XRPL EVM: 18-decimal XRP vs 6 drops on XRPL, `axrp` ↔ drops conversion, Cancun opcodes active on public RPCs (Prague EIP-2935 not deployed), sentinel ERC-20 call limits, address translation from contracts.
 - `wallets.md` — MetaMask `wallet_addEthereumChain` snippets, Reown AppKit / WalletConnect with viem `defineChain` for mainnet, Keplr `experimentalSuggestChain` (coinType 60, `ethm` prefix, `eth-key-sign`), Leap, Cosmostation, Crossmark, Xaman, XRPL MetaMask Snap. Wallet capability matrix.
 - `social-logins.md` — Reown AppKit (Google / X / GitHub / Discord / Apple / Farcaster + email) with pinned versions for XRPL EVM; provisional Privy notes.
 - `oracles-band.md` — Band Protocol on XRPL EVM: (1) `StdReferenceProxy` price feeds (addresses, supported pairs, Solidity + JS examples, staleness checks); (2) custom oracle data via Band Tunnel + TSS (`ITssVerifier`, `originatorHash`, oracle scripts, custom data sources, `minCount` threat model — testnet TSS verifier address verified on-chain, mainnet to be checked against Band deployments).
