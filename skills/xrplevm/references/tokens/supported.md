@@ -11,8 +11,7 @@ XRPL EVM tokens come from four origins. The docs don't publish a single canonica
 
 | Token | Address | Decimals | Notes |
 |---|---|---|---|
-| XRP | `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` | 18 | Sentinel ERC-20, implemented in the node. See `architecture/precompiles-and-wxrp.md`. |
-| WXRP | Mainnet `0x7C21a90E3eCD3215d16c3BBe76a491f8f792d4Bf` | 18 | Forked WETH9 by MOAI Finance, used to work around the 7-call sentinel limit. |
+| XRP | `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` | 18 | Sentinel ERC-20, implemented in the node. See `../architecture/precompiles-and-wxrp.md`. |
 
 ## 2. Bridged from XRPL via Axelar ITS
 
@@ -24,7 +23,7 @@ XRPL IOUs that have been registered with Axelar ITS appear on XRPL EVM as ERC-20
 
 Mainnet RLUSD and other production IOU addresses are not enumerated in docs.xrplevm.org. Look them up at https://axelarscan.io → Interchain Tokens, or via `InterchainTokenService.tokenAddress(tokenId)`.
 
-To register a new IOU, see `bridge-axelar/iou-registration.md`.
+To register a new IOU, see `../bridge-axelar/iou-registration.md`.
 
 ## 3. Bridged from other EVM chains via Axelar ITS
 

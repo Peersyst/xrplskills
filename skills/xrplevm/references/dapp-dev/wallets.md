@@ -54,7 +54,7 @@ async function addXrplEvmTestnet() {
   await window.ethereum.request({
     method: "wallet_addEthereumChain",
     params: [{
-      chainId: "0x161288",   // 1449000
+      chainId: "0x161C28",   // 1449000
       chainName: "XRPL EVM Testnet",
       nativeCurrency: { name: "XRP", symbol: "XRP", decimals: 18 },
       rpcUrls: ["https://rpc.testnet.xrplevm.org"],

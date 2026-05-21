@@ -56,7 +56,7 @@ await its.interchainTransfer(
   "0x",                                    // metadata (unused for plain transfer)
   {
     gasLimit: 8_000_000,
-    value: ethers.utils.parseEther("6"),   // Axelar gas fee (paid in native XRP)
+    value: estimatedAxelarFeeWei,          // quote/estimate this per transfer
   }
 );
 ```

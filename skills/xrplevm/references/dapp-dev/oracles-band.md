@@ -61,7 +61,7 @@ contract PriceConsumer {
 ## Reading from JS
 
 ```typescript
-import { Contract } from "ethers";
+import { Contract, formatUnits } from "ethers";
 
 const ABI = [
   "function getReferenceData(string base, string quote) view returns (tuple(uint256 rate, uint256 lastUpdatedBase, uint256 lastUpdatedQuote))",
@@ -74,7 +74,7 @@ const oracle = new Contract(
 );
 
 const { rate, lastUpdatedBase } = await oracle.getReferenceData("XRP", "USD");
-console.log(Number(rate) / 1e18, "USD/XRP");
+console.log(formatUnits(rate, 18), "USD/XRP");
 ```
 
 ## Reading via the explorer UI

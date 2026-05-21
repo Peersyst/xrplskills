@@ -13,7 +13,6 @@ XRPL's native unit is 6 decimals (drops). XRPL EVM exposes XRP as **18 decimals*
 
 - `msg.value` is in 18-decimal wei.
 - The sentinel ERC-20 at `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` returns `decimals() == 18`.
-- The MOAI Finance WXRP (`0x7C21a90E3eCD3215d16c3BBe76a491f8f792d4Bf`) is also 18 decimals.
 
 Don't deploy a 6-decimal "XRP-token" pool — you'll fragment liquidity and break price math. Use `parseUnits("...", 18)` everywhere.
 
@@ -51,9 +50,7 @@ The chain is migrating to **Cosmos EVM** with Prague fork and `solc 0.8.30`. Onc
 
 The XRP ERC-20 at `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` is implemented as a precompile, not bytecode. There is a hard limit of **7 calls to this address per block per execution path**. Long aggregator routes that touch it more than 7 times will revert.
 
-Workaround: use the [MOAI WXRP](https://xrplevm.moai-finance.xyz/swap) (`0x7C21a90E3eCD3215d16c3BBe76a491f8f792d4Bf` mainnet) for paths that need >7 interactions. WXRP is a standard WETH9 fork — `deposit()` and `withdraw()` swap between native and wrapped 1:1.
-
-For simple swap routes, the sentinel is fine and saves gas.
+For simple swap routes, the sentinel is fine and saves gas. If you hit the limit, structure the route to interact with XRP via an alternative pool/path rather than calling the sentinel repeatedly.
 
 ## 4. Address checksumming
 

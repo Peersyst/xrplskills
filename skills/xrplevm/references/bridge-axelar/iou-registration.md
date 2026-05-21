@@ -41,7 +41,7 @@ If `evmAddr` is non-zero, the IOU is registered and bridgeable. Token IDs and ER
 
 ## Decimal alignment
 
-On XRPL, IOU amounts are floating-point (mantissa + exponent). On XRPL EVM they get a fixed decimal count (typically 18, sometimes the issuer's published `decimals`). Registration sets this — once chosen, it's hard to change without redeploying. Coordinate with the issuer before registering.
+On XRPL, IOU amounts use a decimal string / scientific-notation format (mantissa + exponent). On XRPL EVM they are mapped to a fixed-decimal token amount (typically 18, sometimes the issuer's published `decimals`). Registration sets this — once chosen, it's hard to change without redeploying. Coordinate with the issuer before registering.
 
 ## See also
 

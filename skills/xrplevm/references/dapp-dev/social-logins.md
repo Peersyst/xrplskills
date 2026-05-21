@@ -27,7 +27,7 @@ Pin these exact versions — Reown's transitive deps churn fast and older guides
 
 Sign up at https://cloud.reown.com, create a project, copy the **Project ID** into `.env.local`:
 
-```
+```dotenv
 NEXT_PUBLIC_PROJECT_ID=your_id_here
 ```
 

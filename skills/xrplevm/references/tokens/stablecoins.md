@@ -17,7 +17,7 @@ The docs.xrplevm.org site does not publish a static stablecoin address table for
 
 ### Mainnet
 
-Specific stablecoin contract addresses (USDC, USDT, RLUSD) on XRPL EVM mainnet are **not enumerated** in docs.xrplevm.org. The Band Protocol oracle supports price feeds for USDC, USDT, and RLUSD on XRPL EVM, which confirms they exist on chain, but the live addresses must be discovered via:
+Specific stablecoin contract addresses (USDC, USDT, RLUSD) on XRPL EVM mainnet are **not enumerated** in docs.xrplevm.org. The Band Protocol oracle supports price feeds for USDC, USDT, and RLUSD on XRPL EVM, which confirms they exist on-chain, but the live addresses must be discovered via:
 
 1. **Axelarscan** — https://axelarscan.io → search by symbol → "Interchain Tokens"; the per-chain address is listed under XRPL EVM.
 2. **ITS lookup** — `InterchainTokenService.tokenAddress(tokenId)` for a known `tokenId`.

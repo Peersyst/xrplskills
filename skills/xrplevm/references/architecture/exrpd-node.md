@@ -23,9 +23,9 @@ Source: [System Requirements](https://docs.xrplevm.org/pages/operators/getting-s
 
 | Network | Cosmos chain ID | EVM chain ID | Current version |
 |---|---|---|---|
-| Mainnet | `xrplevm_1440000-1` | `1440000` | `v10.0.2` |
-| Testnet | `xrplevm_1449000-1` | `1449000` | `v10.0.1` |
-| Devnet  | `xrplevm_1449900-1` | `1449900` | `v9.0.3` |
+| Mainnet | `xrplevm_1440000-1` | `1440000` | `v10.0.3` |
+| Testnet | `xrplevm_1449000-1` | `1449000` | `v10.0.3` |
+| Devnet  | `xrplevm_1449900-1` | `1449900` | `v10.0.3` |
 
 Verify current binary versions against [Networks](https://docs.xrplevm.org/pages/operators/resources/networks) before installing — the table above changes with each hard fork.
 
@@ -41,7 +41,7 @@ Verify current binary versions against [Networks](https://docs.xrplevm.org/pages
 ### Raw binary
 
 ```bash
-TARGET_TAG=v10.0.2
+TARGET_TAG=v10.0.3
 wget "https://github.com/xrplevm/node/releases/download/${TARGET_TAG}/node_${TARGET_TAG#v}_Linux_amd64.tar.gz"
 tar -xzf "node_${TARGET_TAG#v}_Linux_amd64.tar.gz"
 sudo mv bin/exrpd /usr/local/bin/exrpd
@@ -51,7 +51,7 @@ exrpd version
 ### Docker
 
 ```bash
-TARGET_TAG=v10.0.2
+TARGET_TAG=v10.0.3
 docker run -d --name xrplevm-node --restart unless-stopped \
   -p 26657:26657 \
   -v /root/.exrpd:/root/.exrpd \
@@ -63,7 +63,7 @@ docker run -d --name xrplevm-node --restart unless-stopped \
 
 Default home: `~/.exrpd/` (or `/var/lib/exrpd/.exrpd` under a service user).
 
-```
+```text
 ~/.exrpd/
   config/
     app.toml                  # app config (EVM, API, gRPC, JSON-RPC)

@@ -94,15 +94,15 @@ Note: `axrp` is atto-XRP (1e-18 XRP). 1 XRP = `1000000000000000000axrp`. Some ol
 ### Staking
 
 ```bash
-# Self-delegate to your own validator (1 XRP example using uxrp units)
-exrpd tx staking delegate $(exrpd keys show $WALLET --bech val -a) 1000000uxrp \
+# Self-delegate to your own validator (1 XRP in axrp units)
+exrpd tx staking delegate $(exrpd keys show $WALLET --bech val -a) 1000000000000000000axrp \
   --from $WALLET --chain-id <chain-id> --gas auto --gas-adjustment 1.5 -y
 
 # Redelegate
-exrpd tx staking redelegate <from-valoper> <to-valoper> 1000000uxrp ...
+exrpd tx staking redelegate <from-valoper> <to-valoper> 1000000000000000000axrp ...
 
 # Unbond
-exrpd tx staking unbond <valoper> 1000000uxrp ...
+exrpd tx staking unbond <valoper> 1000000000000000000axrp ...
 
 # Withdraw rewards
 exrpd tx distribution withdraw-all-rewards --from $WALLET --chain-id <chain-id> ...
@@ -117,7 +117,7 @@ exrpd tx distribution withdraw-rewards <valoper> --from $WALLET --commission \
 ```bash
 # Create a validator
 exrpd tx staking create-validator \
-  --amount 1000000uxrp \
+  --amount 1000000000000000000axrp \
   --from $WALLET \
   --commission-rate 0.1 \
   --commission-max-rate 0.2 \
@@ -139,7 +139,7 @@ exrpd tx slashing unjail --from $WALLET --chain-id <chain-id> ...
 
 ```bash
 exrpd tx gov submit-proposal --title "..." --description "..." \
-  --deposit 1000000uxrp --type Text --from $WALLET --chain-id <chain-id> -y
+  --deposit 1000000000000000000axrp --type Text --from $WALLET --chain-id <chain-id> -y
 
 exrpd tx gov vote <proposal-id> yes --from $WALLET --chain-id <chain-id> ...
 ```

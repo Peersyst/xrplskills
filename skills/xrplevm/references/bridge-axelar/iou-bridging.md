@@ -31,6 +31,7 @@ Unlike the inbound direction, outbound to XRPL **requires extra setup**:
 ```typescript
 import { Wallet, Client } from "xrpl";
 
+const recipientWallet = Wallet.fromSeed(process.env.XRPL_SEED!);
 const client = new Client("wss://s1.ripple.com");
 await client.connect();
 

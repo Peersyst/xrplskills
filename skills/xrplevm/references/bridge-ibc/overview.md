@@ -79,10 +79,10 @@ When you send XRP to Osmosis, it arrives as an IBC voucher denom like `ibc/<HASH
 
 [Range IBC explorer](https://ibc.range.org/transactions) shows packet status, channel IDs, sequences, timeouts, and source/destination tx hashes — useful for debugging stuck packets.
 
-## ICS20 vs ICA vs ICS27
+## ICS20 vs ICA vs General Messaging
 
 - **ICS20** (fungible transfer) — covered above, standard `transfer` port.
-- **Interchain Accounts (ICA)** — accounts controlled cross-chain. XRPL EVM has the `interchain-accounts` module (`exrpd query interchain-accounts`). Useful for cross-chain governance and remote DeFi.
+- **Interchain Accounts (ICA, defined in ICS-27)** — accounts controlled cross-chain. XRPL EVM has the `interchain-accounts` module (`exrpd query interchain-accounts`). Useful for cross-chain governance and remote DeFi.
 - **General messaging** — IBC supports custom application channels, but most use cases go via Axelar GMP on XRPL EVM rather than custom IBC apps.
 
 ## Limitations

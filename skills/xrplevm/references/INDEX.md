@@ -28,7 +28,7 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ### Advanced (EVM)
 
-- [Using XRP as Wrapped ERC-20](https://docs.xrplevm.org/pages/developers/interacting-with-evm/advanced-guides/using-xrp-as-wrapped-erc20) — Sentinel ERC-20 at `0xEee...EEeE`, 7-call limit, MOAI WXRP fallback `0x7C21a...d4Bf`.
+- [Using XRP as Wrapped ERC-20](https://docs.xrplevm.org/pages/developers/interacting-with-evm/advanced-guides/using-xrp-as-wrapped-erc20) — Sentinel ERC-20 at `0xEee...EEeE` (18 decimals).
 - [Resolve .xrpl Domains](https://docs.xrplevm.org/pages/developers/interacting-with-evm/advanced-guides/resolve-xrpl-domains) — ZNS Registry `0xf180136DdC9e4F8c9b5A9FE59e2b1f07265C5D4D` (mainnet), forward/reverse lookup, caching.
 - [Reown AppKit example](https://docs.xrplevm.org/pages/developers/interacting-with-evm/advanced-guides/reown-dapp-example) — Full Next.js + Reown integration for social login on XRPL EVM.
 

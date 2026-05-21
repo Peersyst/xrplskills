@@ -1,6 +1,6 @@
 ---
 name: xrplevm
-description: "Reference for the XRPL EVM sidechain — a sovereign Cosmos SDK L1 with EVM execution, XRP as native gas (18 decimals), PoA consensus via CometBFT, bridged to XRPL via Axelar. Trigger on: XRPL EVM, XRPL EVM Sidechain, EVM sidechain, exrpd, Cosmos EVM, evmOS, x/poa, x/erc20, x/feemarket, Axelar bridge XRPL, Axelar GMP, Axelar ITS, InterchainTokenService, AxelarGateway, AxelarExecutable, AxelarGasService, WXRP precompile, XRP ERC-20, 0xEee precompile, Squid widget, SquidRouter, Skip Go widget, faucet.xrplevm.org, Goldsky XRPL EVM, subgraph, Band Protocol XRPL EVM, StdReferenceProxy, MetaMask XRPL EVM, Keplr XRPL EVM, ethm address, Reown AppKit XRPL EVM, Privy XRPL EVM, IBC XRPL EVM, channel-2 channel-3 channel-4, chain ID 1440000, chain ID 1449000, chain ID 1449900, xrplevm_1440000-1, ZNS .xrpl domain, bridging XRP, bridging IOU, RLUSD bridging, decimals 6 to 18, axrp, drops conversion."
+description: "Reference for the XRPL EVM sidechain — a sovereign Cosmos SDK L1 with EVM execution, XRP as native gas (18 decimals), PoA consensus via CometBFT, bridged to XRPL via Axelar. Trigger on: XRPL EVM, XRPL EVM Sidechain, EVM sidechain, exrpd, Cosmos EVM, evmOS, x/poa, x/erc20, x/feemarket, Axelar bridge XRPL, Axelar GMP, Axelar ITS, InterchainTokenService, AxelarGateway, AxelarExecutable, AxelarGasService, XRP ERC-20, 0xEee precompile, Squid widget, SquidRouter, Skip Go widget, faucet.xrplevm.org, Goldsky XRPL EVM, subgraph, Band Protocol XRPL EVM, StdReferenceProxy, MetaMask XRPL EVM, Keplr XRPL EVM, ethm address, Reown AppKit XRPL EVM, Privy XRPL EVM, IBC XRPL EVM, channel-2 channel-3 channel-4, chain ID 1440000, chain ID 1449000, chain ID 1449900, xrplevm_1440000-1, ZNS .xrpl domain, bridging XRP, bridging IOU, RLUSD bridging, decimals 6 to 18, axrp, drops conversion."
 ---
 
 # xrplevm
@@ -65,7 +65,7 @@ Common locations:
 - `exrpd-node.md` — `exrpd` binary, install methods, data dirs, ports, mandatory `evm-chain-id`.
 - `exrpd-cli.md` — Common `exrpd` commands cheatsheet.
 - `cosmos-layer-interop.md` — Address translation, Cosmos REST/gRPC from EVM dApps, `x/erc20` token pairs.
-- `precompiles-and-wxrp.md` — XRP sentinel ERC-20 at `0xEee...EEeE` (18 decimals, 7-call limit), WXRP fallback for paths needing more interactions.
+- `precompiles-and-wxrp.md` — XRP sentinel ERC-20 at `0xEee...EEeE` (18 decimals).
 
 ### bridge-axelar/
 

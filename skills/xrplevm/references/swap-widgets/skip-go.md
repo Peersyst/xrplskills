@@ -33,7 +33,7 @@ export function Onramp() {
 
 https://go.skip.build/ accepts URL parameters for prefill:
 
-```
+```text
 https://go.skip.build/?src_asset=uatom&src_chain=cosmoshub-4&dest_asset=axrp&dest_chain=xrplevm_1440000-1&amount_in=&amount_out=
 ```
 

@@ -34,7 +34,7 @@ To fund an XRPL Testnet account for bridging, use the [XRPL MetaMask Snap](https
 | Source | Amount | Notes |
 |---|---|---|
 | [`chains.tools/faucet/xrplevm`](https://chains.tools/faucet/xrplevm) | up to 10 XRP | 60-minute cooldown per wallet |
-| [`bridge.xrplevm.org`](https://bridge.xrplevm.org) (Devnet bridge) | varies | Auto-generates a funded XRPL Devnet account (100 XRP) and bridges |
+| [`bridge.devnet.xrplevm.org`](https://bridge.devnet.xrplevm.org/) (Devnet bridge) | varies | Auto-generates a funded XRPL Devnet account (100 XRP) and bridges |
 
 The Devnet bridge UI lives at [`https://bridge.devnet.xrplevm.org/`](https://bridge.devnet.xrplevm.org/). Track transfers on the [Axelar Devnet Amplifier Explorer](https://devnet-amplifier.axelarscan.io/gmp/search) and verify balances on the [Devnet explorer](https://explorer.devnet.xrplevm.org).
 

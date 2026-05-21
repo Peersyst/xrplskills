@@ -90,7 +90,7 @@ xrplevm_testnet = "https://rpc.testnet.xrplevm.org"
 
 `.env`:
 
-```
+```dotenv
 PRIVATE_KEY=0x...
 RPC_URL=https://rpc.xrplevm.org
 CHAIN_ID=1440000
@@ -181,7 +181,7 @@ await window.ethereum.request({
 });
 ```
 
-Testnet `chainId` hex: `0x161288` (`1449000`).
+Testnet `chainId` hex: `0x161C28` (`1449000`).
 
 ## Gas notes
 

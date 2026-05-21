@@ -22,9 +22,9 @@ Set `evm-chain-id` under `[evm]` in `app.toml` to the EVM value before starting 
 | Type | URL |
 |---|---|
 | Ethereum JSON-RPC | `https://rpc.xrplevm.org` |
-| Ethereum WSS | `https://ws.xrplevm.org` |
+| Ethereum WSS | `wss://ws.xrplevm.org` |
 | Tendermint RPC | `https://cosmos-rpc.xrplevm.org` |
-| Cosmos gRPC | `https://cosmos-grpc.xrplevm.org` |
+| Cosmos gRPC | `cosmos-grpc.xrplevm.org:443` |
 | Cosmos REST | `https://cosmos-api.xrplevm.org` |
 
 ## Testnet
@@ -32,10 +32,10 @@ Set `evm-chain-id` under `[evm]` in `app.toml` to the EVM value before starting 
 | Type | URL |
 |---|---|
 | Ethereum JSON-RPC | `https://rpc.testnet.xrplevm.org` |
-| Ethereum WSS | `https://ws.testnet.xrplevm.org` |
+| Ethereum WSS | `wss://ws.testnet.xrplevm.org` |
 | Tendermint RPC | `https://cosmos-rpc.testnet.xrplevm.org` |
 | Cosmos gRPC | `cosmos-grpc.testnet.xrplevm.org:443` |
-| Cosmos REST | `http://cosmos-api.testnet.xrplevm.org` |
+| Cosmos REST | `https://cosmos-api.testnet.xrplevm.org` |
 
 ## Devnet
 
@@ -85,10 +85,10 @@ curl -s https://cosmos-rpc.xrplevm.org/status | jq .result.sync_info
 Cosmos gRPC — requires `grpcurl` and the relevant `.proto` definitions:
 
 ```bash
-grpcurl -plaintext cosmos.xrplevm.org:9090 cosmos.gov.v1.Query/Proposals
+grpcurl cosmos-grpc.xrplevm.org:443 cosmos.gov.v1.Query/Proposals
 ```
 
-For testnet, replace the host with `cosmos.testnet.xrplevm.org:9090`. The buf registry at [buf.build/cosmos/cosmos-sdk](https://buf.build/cosmos/cosmos-sdk) hosts the gRPC schema.
+For testnet, replace the host with `cosmos-grpc.testnet.xrplevm.org:443`. The buf registry at [buf.build/cosmos/cosmos-sdk](https://buf.build/cosmos/cosmos-sdk) hosts the gRPC schema.
 
 ## See also
 

@@ -52,7 +52,7 @@ Canonical category values:
 
 | Category | Project |
 |---|---|
-| DEX / WXRP issuer | [MOAI Finance](https://xrplevm.moai-finance.xyz) |
+| DEX | [MOAI Finance](https://xrplevm.moai-finance.xyz) |
 | Bridge aggregator | [SquidRouter](https://app.squidrouter.com) |
 | IBC swap router | [Skip Go](https://go.skip.build) |
 | Oracle | [Band Protocol](https://docs.xrplevm.org/pages/developers/interacting-with-evm/use-oracle-data/band-protocol) |

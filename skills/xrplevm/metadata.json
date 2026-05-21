@@ -49,8 +49,8 @@
     },
     {
       "path": "references/architecture/precompiles-and-wxrp.md",
-      "title": "XRP Precompile and WXRP",
-      "description": "Sentinel XRP ERC-20 at 0xEee...EEeE, MOAI WXRP fallback, 7-call limit."
+      "title": "XRP Precompile",
+      "description": "Sentinel XRP ERC-20 at 0xEee...EEeE (18 decimals)."
     },
     {
       "path": "references/bridge-axelar/overview.md",
