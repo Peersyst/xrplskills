@@ -22,12 +22,12 @@ When XRP is bridged out to XRPL via Axelar ITS, the node truncates to 6-decimal 
 
 As of 2026-05-21, the public mainnet and testnet RPCs execute Cancun-era opcodes — `TLOAD` / `TSTORE` (transient storage), `MCOPY`, and `PUSH0` all run successfully via state-override `eth_call`. Blob-related opcodes (`BLOBBASEFEE`, `BLOBHASH`) currently revert with `nil pointer dereference`, and the Prague EIP-2935 system contract at `0x0000F90827F1C53a10cb7A02335B175320002935` is **not** deployed — target Cancun, not Prague.
 
-Pin `solc` to a release that supports Cancun (`0.8.24` is the first; pick the latest stable your toolchain ships) and set `evm_version = "cancun"`:
+Use `solc 0.8.30` and set `evm_version = "cancun"`:
 
 ```toml
 # foundry.toml
 [profile.default]
-solc_version = "0.8.24"
+solc_version = "0.8.30"
 evm_version  = "cancun"
 ```
 
@@ -35,7 +35,7 @@ Hardhat:
 
 ```js
 solidity: {
-  version: "0.8.24",
+  version: "0.8.30",
   settings: { evmVersion: "cancun" },
 },
 ```

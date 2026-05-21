@@ -20,7 +20,7 @@ Currency symbol: `XRP`. Decimals: `18`.
 ## Solidity version
 
 - The public mainnet and testnet RPCs execute Cancun-era opcodes (`TLOAD`, `TSTORE`, `MCOPY`, `PUSH0`). The Prague hard fork is **not** active — EIP-2935 system contract at `0x0000F90827F1C53a10cb7A02335B175320002935` has no bytecode.
-- Pin `solc` to a Cancun-capable release (`0.8.24` or newer) and set `evmVersion`/`evm_version` to `cancun`.
+- Use `solc 0.8.30` and set `evmVersion`/`evm_version` to `cancun`.
 - Avoid Prague-specific primitives until upstream documentation confirms Prague support — blob-related opcodes (`BLOBBASEFEE`, `BLOBHASH`) currently revert on the public RPCs.
 
 ## Hardhat
@@ -33,7 +33,7 @@ require("dotenv").config();
 
 module.exports = {
   solidity: {
-    version: "0.8.24",
+    version: "0.8.30",
     settings: { evmVersion: "cancun" },
   },
   networks: {
@@ -83,7 +83,7 @@ Verify: `npx hardhat verify --network xrplEVM <ADDRESS> [constructorArgs...]`. T
 
 ```toml
 # foundry.toml
-solc_version = "0.8.24"
+solc_version = "0.8.30"
 evm_version = "cancun"
 
 [rpc_endpoints]
