@@ -26,9 +26,11 @@ if (res.result.engine_result === 'tesSUCCESS') {
 **Correct — wait for finality:**
 
 ```ts
+import type { TransactionMetadata } from 'xrpl'
+
 const res = await client.submitAndWait(signed.tx_blob)
 if (!res.result.validated) throw new Error('not validated')
-const meta = res.result.meta as any
+const meta = res.result.meta as TransactionMetadata
 if (meta.TransactionResult === 'tesSUCCESS') {
   markSettled(res.result.hash)
 } else {
@@ -42,7 +44,7 @@ if (meta.TransactionResult === 'tesSUCCESS') {
 const submission = await client.submit(signed.tx_blob)
 await txTracker.enqueue({
   hash: submission.result.tx_json.hash,
-  lastLedgerSequence: signed.tx_json.LastLedgerSequence!,
+  lastLedgerSequence: submission.result.tx_json.LastLedgerSequence!,
 })
 // elsewhere: a worker polls `tx` and updates state on validated:true
 ```

@@ -31,35 +31,42 @@ async function send(tx: Payment) {
 }
 ```
 
-**Correct — sign once, retry the same blob:**
+**Correct — sign once, let `submitAndWait` re-submit the same blob:**
 
 ```ts
 async function sendIdempotent(tx: Payment) {
   const prepared = await client.autofill(tx)
   const signed = wallet.sign(prepared)                    // sign once
 
-  for (let attempt = 0; attempt < 5; attempt++) {
-    try {
-      return await client.submitAndWait(signed.tx_blob)   // same blob
-    } catch (e) {
-      if (isFinal(e)) throw e                             // LastLedgerSequence exceeded
-      await sleep(2 ** attempt * 1000)
-    }
+  // submitAndWait re-submits the SAME blob on transport errors and
+  // polls until inclusion or LastLedgerSequence is exceeded. If it
+  // throws, the tx is terminal — confirm by hash before giving up,
+  // in case it landed in the same ledger as the error.
+  try {
+    return await client.submitAndWait(signed.tx_blob)
+  } catch (e) {
+    return await client.request({ command: 'tx', transaction: signed.hash })
   }
-  // After enough retries, poll `tx` by hash to settle the question.
-  return await client.request({ command: 'tx', transaction: signed.hash })
 }
 ```
+
+If you do add an outer retry loop, the inviolable rule is: re-submit the **same** `signed.tx_blob` each time. Calling `autofill` again to "get a fresh tx" is what creates the double-spend window this rule exists to prevent.
 
 **Correct — Ticket-based pipeline:**
 
 ```ts
-// Once: pre-allocate 100 tickets
-await client.submitAndWait(wallet.sign(await client.autofill({
+// Once: pre-allocate N tickets.
+// Each unconsumed ticket counts as an owned ledger object and adds to the
+// account's owner reserve. The increment is set by network config
+// (`server_state.validated_ledger.reserve_inc`) — size N to your in-flight
+// throughput, not to "as many as possible".
+const TICKET_COUNT = 10
+const prepared = await client.autofill({
   TransactionType: 'TicketCreate',
   Account: wallet.address,
-  TicketCount: 100,
-})).tx_blob)
+  TicketCount: TICKET_COUNT,
+})
+await client.submitAndWait(wallet.sign(prepared).tx_blob)
 
 // Per job: assign a ticket from your queue
 const tx: Payment = {
