@@ -24,7 +24,8 @@ import "github.com/Peersyst/xrpl-go/xrpl/currency"
 
 drops, err := currency.XrpToDrops("1.5")       // "1500000"
 if err != nil { return err }
-amt, _ := strconv.ParseInt(drops, 10, 64)
+amt, err := strconv.ParseUint(drops, 10, 64)
+if err != nil { return err }
 p.Amount = types.XRPCurrencyAmount(amt)
 ```
 

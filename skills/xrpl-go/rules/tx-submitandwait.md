@@ -27,9 +27,9 @@ Use the submit-only variants only when you have a separate, deliberate path that
 ```go
 res, err := client.SubmitTxBlobAndWait(blob, false)
 if err != nil { return err }                    // either submit-time error or LastLedgerSequence timeout
-if res.Meta.AsPaymentMetadata().TransactionResult != "tesSUCCESS" {
+if res.Meta.AsTxObjMeta().TransactionResult != "tesSUCCESS" {
     // tec* — applied but failed. Surface, do not auto-retry. See tx-handle-tec-codes.
-    return errors.New("tx applied but failed: " + res.Meta.AsPaymentMetadata().TransactionResult)
+    return errors.New("tx applied but failed: " + res.Meta.AsTxObjMeta().TransactionResult)
 }
 // res.Validated == true, res.Hash is canonical
 ```
