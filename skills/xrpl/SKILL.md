@@ -93,7 +93,7 @@ The rules in this skill explain *what* to do and *why*. When you need a runnable
 
 When the user asks "how do I send a payment / mint an NFT / set up an escrow" and the answer requires runnable code, fetch the matching sample and adapt it — do not paraphrase the structure from memory.
 
-## How to use a rule file
+## How to Use
 
 Once you have picked a rule from the table above, read its file:
 
