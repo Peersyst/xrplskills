@@ -1,6 +1,6 @@
 ---
 title: exrpd Node
-description: The exrpd binary — XRPL EVM node, key configs, ports, data dirs, install methods.
+description: Running an XRPL EVM full node with `exrpd` — system requirements (8c/32GB/1TB NVMe), install methods (raw binary, source build, Docker `peersyst/exrp`, Cosmovisor), data directories, ports (26656 P2P, 26657 RPC, 1317 REST, 9090 gRPC, 8545 EVM JSON-RPC, 8546 WSS), `app.toml`/`config.toml`, mandatory `evm-chain-id` setting, network reference.
 ---
 
 # exrpd Node

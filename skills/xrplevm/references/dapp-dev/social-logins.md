@@ -1,6 +1,6 @@
 ---
 title: Social Logins on XRPL EVM
-description: Integrate Reown AppKit (Google, GitHub, Discord, X, Apple, Farcaster) and Privy social login for XRPL EVM dApps.
+description: Social-login embedded wallets on XRPL EVM — Reown AppKit (Google, X, GitHub, Discord, Apple, Farcaster, email) with pinned versions (`@reown/appkit@1.7.6`, `wagmi@2.15.4`, `viem@2.30.0`); local `defineChain` for mainnet until viem ships `xrplevm`; provisional Privy notes for any-EVM social login.
 ---
 
 # Social Logins
@@ -9,7 +9,7 @@ Embedded wallets via social login lower friction dramatically. Reown AppKit is t
 
 ## Reown AppKit
 
-Reown is the rebrand of WalletConnect AppKit. It exposes social login (Google, X, GitHub, Discord, Apple, Farcaster) plus email and standard wallet connect, all behind one modal. XRPL EVM mainnet and testnet ship pre-defined in `@reown/appkit/networks`.
+Reown is the rebrand of WalletConnect AppKit. It exposes social login (Google, X, GitHub, Discord, Apple, Farcaster) plus email and standard wallet connect, all behind one modal. `@reown/appkit/networks` re-exports `viem/chains`; with the version pins below, **only `xrplevmTestnet` is shipped pre-defined** — the mainnet `xrplevm` chain was added to `viem` in a release later than `2.30.0`, so for mainnet you must define the chain locally with `defineChain` (see `dapp-dev/evm-tooling.md`) until you upgrade `viem`.
 
 ### Versions (compatible)
 
@@ -37,10 +37,11 @@ NEXT_PUBLIC_PROJECT_ID=your_id_here
 // src/config/wagmi.ts
 import { cookieStorage, createStorage } from '@wagmi/core';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-import { xrplevm, xrplevmTestnet } from '@reown/appkit/networks';
+import { xrplevmTestnet } from '@reown/appkit/networks';
+import { xrplevmMainnet } from './chains';  // local defineChain() — see dapp-dev/evm-tooling.md
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID!;
-export const networks = [xrplevm, xrplevmTestnet];
+export const networks = [xrplevmMainnet, xrplevmTestnet];
 
 export const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({ storage: cookieStorage }),
@@ -60,7 +61,8 @@ export const config = wagmiAdapter.wagmiConfig;
 import { wagmiAdapter, projectId } from '@/config/wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
-import { xrplevm, xrplevmTestnet } from '@reown/appkit/networks';
+import { xrplevmTestnet } from '@reown/appkit/networks';
+import { xrplevmMainnet } from '@/config/chains';  // local defineChain() — see dapp-dev/evm-tooling.md
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi';
 
 const queryClient = new QueryClient();
@@ -68,7 +70,7 @@ const queryClient = new QueryClient();
 createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [xrplevm, xrplevmTestnet],
+  networks: [xrplevmMainnet, xrplevmTestnet],
   defaultNetwork: xrplevmTestnet,
   metadata: {
     name: 'My XRPL EVM dApp',

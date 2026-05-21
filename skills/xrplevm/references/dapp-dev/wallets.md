@@ -1,6 +1,6 @@
 ---
 title: Wallet Integration
-description: MetaMask wallet_addEthereumChain snippets, WalletConnect setup, Keplr suggestChain for XRPL EVM Cosmos side.
+description: Wallet integration for XRPL EVM — MetaMask `wallet_addEthereumChain` snippets (mainnet/testnet), Reown AppKit / WalletConnect setup with viem `defineChain` for mainnet, Keplr `experimentalSuggestChain` for the Cosmos side (coinType 60, `ethm` bech32 prefix, `eth-key-sign`), Leap, Cosmostation, Crossmark, Xaman (XRPL-side bridging), XRPL MetaMask Snap. Wallet capability matrix.
 ---
 
 # Wallet Integration
@@ -66,12 +66,13 @@ async function addXrplEvmTestnet() {
 
 ## WalletConnect / Reown AppKit
 
-Reown AppKit (formerly WalletConnect AppKit) ships pre-defined networks. Import directly:
+Reown AppKit (formerly WalletConnect AppKit) re-exports `viem/chains`. With the version pin `viem@2.30.0` recommended in `dapp-dev/social-logins.md`, only `xrplevmTestnet` is shipped pre-defined; the mainnet chain was added in a later `viem` release. For mainnet, define it locally with `defineChain` (see `dapp-dev/evm-tooling.md`) and import alongside the testnet export:
 
 ```typescript
-import { xrplevm, xrplevmTestnet } from "@reown/appkit/networks";
+import { xrplevmTestnet } from "@reown/appkit/networks";
+import { xrplevmMainnet } from "./chains";  // local defineChain() — see dapp-dev/evm-tooling.md
 
-const networks = [xrplevm, xrplevmTestnet];
+const networks = [xrplevmMainnet, xrplevmTestnet];
 ```
 
 This is the path for any wagmi-based dApp targeting XRPL EVM. See `dapp-dev/social-logins.md` for the social-login setup.

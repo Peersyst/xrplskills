@@ -1,6 +1,6 @@
 ---
 title: exrpd CLI Cheatsheet
-description: Common exrpd commands — keys, tx, query, status, debug, governance, validator ops.
+description: exrpd CLI cheatsheet for XRPL EVM — `exrpd status`, `keys`, `tx send/delegate`, `query bank/staking/gov`, `debug addr` for Bech32↔hex, governance proposals, validator create/edit, IBC transfers. Cosmos SDK CLI usage on XRPL EVM.
 ---
 
 # exrpd CLI Cheatsheet

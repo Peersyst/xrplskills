@@ -1,6 +1,6 @@
 ---
 title: XRPL EVM Block Explorers
-description: Block explorer URLs for XRPL EVM mainnet, testnet, devnet — EVM, Cosmos, and crosschain views.
+description: Block explorers for XRPL EVM mainnet/testnet/devnet — EVM (Blockscout at explorer.xrplevm.org), Cosmos governance (governance.xrplevm.org), crosschain (AxelarScan, Range, ITRocket). Blockscout `/api` endpoint for Hardhat `customChains` verification config.
 ---
 
 # Block Explorers

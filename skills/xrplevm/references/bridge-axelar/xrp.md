@@ -1,6 +1,6 @@
 ---
 title: Bridging XRP via Axelar
-description: How to bridge XRP from XRPL to XRPL EVM and back, using SquidRouter UI or programmatic ITS calls.
+description: Bridging native XRP between XRPL and XRPL EVM via Axelar — SquidRouter UI flow, programmatic Axelar ITS `interchainTransfer` from EVM side, XRPL Payment with interchain-transfer memos from XRPL side, r-address → 20-byte EVM hex conversion, XRP token ID on Axelar.
 ---
 
 # Bridging XRP via Axelar

@@ -1,6 +1,6 @@
 ---
 title: Bridging ERC-20 via Axelar ITS
-description: Move ERC-20 tokens between XRPL EVM and other Axelar-connected chains (Ethereum, Polygon, Avalanche, etc.) using the Interchain Token Service.
+description: Move ERC-20 tokens between XRPL EVM and other Axelar-connected chains (Ethereum, Polygon, Arbitrum, Avalanche, BSC, etc.) via Interchain Token Service — Squid UI flow, programmatic `InterchainTokenService.interchainTransfer`, gas-payment via `AxelarGasService`, supported chain list, ITS factory address.
 ---
 
 # Bridging ERC-20 via Axelar ITS
@@ -55,10 +55,18 @@ For canonical ERC-20s, query `InterchainTokenFactory`:
 ```typescript
 const factory = new Contract(FACTORY_ADDR, FACTORY_ABI, provider);
 const tokenId = await factory.canonicalInterchainTokenId(originalTokenAddress);
-const localAddr = await its.tokenAddress(tokenId);   // address on this chain
+
+// For canonical/registered tokens (e.g. XRP):
+const registeredAddr = await its.registeredTokenAddress(tokenId);
+// For interchain tokens deployed by InterchainTokenFactory (e.g. IOUs):
+const interchainAddr = await its.interchainTokenAddress(tokenId);
+
+// Always verify the result has bytecode before integrating:
+const code = await provider.getCode(interchainAddr);
+if (code === "0x") throw new Error("Token ERC-20 not deployed at this address");
 ```
 
-Or look it up on https://axelarscan.io → Interchain Tokens.
+The direct `tokenAddress(bytes32)` selector (`0x97bb3ce9`) **reverts** on the XRPL EVM ITS deployments — use one of the two getters above. Or look up the address on https://axelarscan.io → Interchain Tokens.
 
 ## Mainnet / Testnet ITS factory addresses
 
@@ -73,7 +81,7 @@ The `value:` field on `interchainTransfer` pays the Axelar relayer. Underestimat
 
 ## Receiving ERC-20s on XRPL EVM from other chains
 
-There's nothing to call on XRPL EVM — the relayer triggers `interchainTransfer` on the destination ITS, which mints/releases the token to the recipient. The token will appear in MetaMask once you import the local contract address (lookup via `its.tokenAddress(tokenId)`).
+There's nothing to call on XRPL EVM — the relayer triggers `interchainTransfer` on the destination ITS, which mints/releases the token to the recipient. The token will appear in MetaMask once you import the local contract address (lookup via `its.interchainTokenAddress(tokenId)` for deployed interchain tokens or `its.registeredTokenAddress(tokenId)` for canonical/registered tokens — the legacy `tokenAddress(bytes32)` selector reverts on the XRPL EVM ITS).
 
 ## See also
 

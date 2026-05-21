@@ -1,6 +1,6 @@
 ---
 title: IBC on XRPL EVM
-description: Bridging XRP and Cosmos assets via IBC. Channels to Cosmos Hub, Osmosis, Injective, Elys Network, Noble. ICS20 transfers from EVM.
+description: IBC on XRPL EVM — ICS20 transfers of XRP (denom `axrp`) and Cosmos assets, channel IDs to Cosmos Hub (channel-2), Osmosis, Injective, Elys, Noble per network, Keplr-based UX, `exrpd tx ibc-transfer transfer` CLI, `x/erc20` token-pair lookup for IBC tokens as ERC-20s.
 ---
 
 # IBC on XRPL EVM

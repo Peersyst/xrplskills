@@ -1,6 +1,6 @@
 ---
 title: XRPL EVM Endpoints
-description: Public RPC, EVM JSON-RPC, REST API, WS, gRPC endpoints for XRPL EVM mainnet, testnet, devnet, with example curl queries.
+description: Public endpoints for XRPL EVM mainnet, testnet, and devnet — EVM JSON-RPC (rpc.*), WSS (ws.*), Tendermint RPC (cosmos-rpc.*), Cosmos REST (cosmos-api.*), Cosmos gRPC (cosmos-grpc.*:443). Chain IDs (Cosmos and EIP-155). Third-party RPC providers (Polkachu, Cumulo, ITRocket). Example curl queries (eth_chainId, eth_blockNumber, bank balance, gov proposals).
 ---
 
 # Endpoints
@@ -39,7 +39,15 @@ Set `evm-chain-id` under `[evm]` in `app.toml` to the EVM value before starting 
 
 ## Devnet
 
-Devnet endpoints are not documented as public on docs.xrplevm.org. Use the Devnet faucet at https://chains.tools/faucet/xrplevm and bridge at https://bridge.devnet.xrplevm.org. For RPC, ask in [Discord](https://discord.gg/xrplevm) or run a Devnet node from the [genesis file](https://raw.githubusercontent.com/xrplevm/networks/refs/heads/main/devnet/genesis.json).
+| Type | URL |
+|---|---|
+| Ethereum JSON-RPC | `https://rpc.devnet.xrplevm.org` |
+| Ethereum WSS | `wss://ws.devnet.xrplevm.org` |
+| Tendermint RPC | `https://cosmos-rpc.devnet.xrplevm.org` |
+| Cosmos gRPC | `cosmos-grpc.devnet.xrplevm.org:443` |
+| Cosmos REST | `https://cosmos-api.devnet.xrplevm.org` |
+
+`eth_chainId` returns `0x161fac` (= `1449900`). Auxiliary services: Devnet faucet at https://chains.tools/faucet/xrplevm and bridge UI at https://bridge.devnet.xrplevm.org. Genesis file for self-hosted nodes: https://raw.githubusercontent.com/xrplevm/networks/refs/heads/main/devnet/genesis.json.
 
 ## Third-party providers
 

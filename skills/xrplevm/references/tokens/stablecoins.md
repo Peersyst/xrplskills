@@ -1,34 +1,63 @@
 ---
 title: Stablecoins on XRPL EVM
-description: USDC, USDT, RLUSD on XRPL EVM — known contract addresses and where to find current values.
+description: Mainnet stablecoin addresses on XRPL EVM — USDT (Ethereum-origin), USDC (Ethereum and Noble-IBC origins), DAI, FDUSD, USDf, plus RLUSD bridging notes. Decimals per token. Sourced from the `xrplevm-tvl` repo's `src/config/assets.ts`.
 ---
 
 # Stablecoins
 
-The docs.xrplevm.org site does not publish a static stablecoin address table for mainnet. Stablecoin presence on XRPL EVM is driven by bridge registrations (Axelar ITS for ERC-20s, IBC + `x/erc20` for Cosmos sources, ITS for XRPL IOUs like RLUSD).
+Primary source for the practical token list used by the ecosystem dashboard:
 
-## Known addresses
+- Repo: https://github.com/vriveraPeersyst/xrplevm-tvl
+- File: `src/config/assets.ts`
 
-### Testnet
+## Mainnet stablecoins tracked in `xrplevm-tvl`
 
-| Token | Address | Source |
-|---|---|---|
-| RLUSD (Ripple USD, ERC-20 representation) | `0x20937978F265DC0C947AA8e136472CFA994FE1eD` | [send-tokens guide](https://docs.xrplevm.org/pages/developers/interacting-with-evm/advanced-guides/cross-chain-transactions/send-tokens) |
+| Token | Source chain | Address | Decimals |
+|---|---|---|---|
+| USDT | Ethereum | `0x9F8CF9c00fac501b3965872f4ed3271f6f4d06fF` | 6 |
+| USDC | Ethereum | `0xa16148c6Ac9EDe0D82f0c52899e22a575284f131` | 6 |
+| USDC | Noble | `0xDDF7e0b30A631076cD80bc12A48C0e95404b4A41` | 6 |
+| DAI | Ethereum | `0xDc556F7209C48fC53a8cDf1339c033743A7e3e75` | 18 |
+| FDUSD | Ethereum | `0xE5747226D2005d7f0865780E8517397de66f2a76` | 18 |
+| USDf | Ethereum | `0x5E54c1bbc5F19C7A39CC6ff7dbdFBdF438a3CD60` | 18 |
 
-### Mainnet
+## RLUSD notes
 
-Specific stablecoin contract addresses (USDC, USDT, RLUSD) on XRPL EVM mainnet are **not enumerated** in docs.xrplevm.org. The Band Protocol oracle supports price feeds for USDC, USDT, and RLUSD on XRPL EVM, which confirms they exist on-chain, but the live addresses must be discovered via:
+- RLUSD is part of XRPL EVM bridge flows and is available in Band feeds, but it is **not currently listed in the `STATIC_ASSETS` table** of `xrplevm-tvl`.
+- Testnet ITS token ID for RLUSD: `0x85f75bb7fd0753565c1d2cb59bd881970b52c6f06f3472769ba7b48621cd9d23`.
+- Testnet ERC-20 address: **see notes — currently inactive on testnet**.
 
-1. **Axelarscan** — https://axelarscan.io → search by symbol → "Interchain Tokens"; the per-chain address is listed under XRPL EVM.
-2. **ITS lookup** — `InterchainTokenService.tokenAddress(tokenId)` for a known `tokenId`.
-3. **Goldsky / explorers** — search by symbol on https://explorer.xrplevm.org.
-4. **MOAI Finance** and other DEXes' token lists — https://xrplevm.moai-finance.xyz.
+> **Stale upstream:** as of 2026-05-21, the address `0x20937978F265DC0C947AA8e136472CFA994FE1eD` listed in the upstream send-tokens guide returns no bytecode on testnet, and the ITS registration (`interchainTokenAddress` / `tokenManagerAddress`) points to addresses that also have no code. Use Axelarscan testnet (https://testnet.axelarscan.io → Interchain Tokens → search "RLUSD") to discover the current testnet ERC-20 if one is redeployed, or call `interchainTokenAddress(0x85f75bb7…)` on ITS testnet and check `eth_getCode` before integrating.
 
-## Origins (typical)
+For RLUSD mainnet, verify directly on explorer/Axelarscan before integrating production flows.
 
-- **USDC** — Most likely Axelar-bridged from Ethereum (Circle's canonical) or routed from Noble via IBC + `x/erc20`. Different routes mean different addresses; verify the issuer before treating as fungible.
-- **USDT** — Likely Axelar-bridged. Check the source chain of the token before integrating (Tether-on-Ethereum vs. Tether-on-Tron are not the same asset).
-- **RLUSD** — Native XRPL IOU issued by `rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De` (mainnet issuer), bridged to XRPL EVM via Axelar ITS.
+## XRPL IOU issuer (Axelar Bridge) reference
+
+For XRPL-side trustlines on Axelar-issued currencies, key issuer accounts are:
+
+- Mainnet: `rfmS3zqrQrka8wVyhXifEeyTwe8AMz2Yhw` (Axelar Bridge)
+- Testnet: `rNrjh1KGZk2jBR3wPfAQnoidtFFYQKbQn2` (Axelar Bridge testnet)
+
+User-provided mainnet snapshot includes tokens such as:
+
+- `USDC.axl` — `555344432E61786C000000000000000000000000`
+- `USDf` — `5553446600000000000000000000000000000000`
+
+User-provided testnet snapshot includes issued IOUs such as:
+
+- `WAVAX` — `5741564158000000000000000000000000000000`
+- `mXRP` — `6D58525000000000000000000000000000000000`
+- `SQD` — `SQD`
+
+The same testnet account snapshot also shows **owned** `RLUSD` from issuer:
+
+- `rMPrLNZt4Zv4eRyN4ew9TRn5iumRG8Htpw` (`524C555344000000000000000000000000000000`)
+
+## Important integration notes
+
+- Same symbol can map to different assets by origin (example: USDC from Ethereum vs USDC from Noble).
+- Always validate address + source chain + bridge path before treating tokens as fungible.
+- Re-check `src/config/assets.ts` periodically, because this catalog is maintained operationally for the TVL dashboard.
 
 ## Oracle feeds
 
@@ -41,6 +70,11 @@ See `dapp-dev/oracles-band.md`.
 
 ## See also
 
+- https://github.com/vriveraPeersyst/xrplevm-tvl
+- https://github.com/vriveraPeersyst/xrplevm-tvl/blob/main/src/config/assets.ts
+- https://xrpscan.com/account/rfmS3zqrQrka8wVyhXifEeyTwe8AMz2Yhw
+- https://xrpscan.com/account/rNrjh1KGZk2jBR3wPfAQnoidtFFYQKbQn2
 - https://axelarscan.io
+- https://app.squidrouter.com/?fromChain=xrpl+evm&fromToken=xrp
+- https://explorer.xrplevm.org
 - https://docs.xrplevm.org/pages/developers/interacting-with-evm/use-oracle-data/band-protocol
-- https://ecosystem.xrplevm.org

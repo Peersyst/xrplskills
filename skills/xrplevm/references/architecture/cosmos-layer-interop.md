@@ -1,6 +1,6 @@
 ---
 title: Cosmos-EVM Interop on XRPL EVM
-description: Address translation between 0x and ethm Bech32, calling Cosmos modules from EVM-only setups, using REST/gRPC alongside JSON-RPC.
+description: XRPL EVM Cosmos/EVM interop — Bech32 (`ethm1...`) ↔ EIP-55 (`0x...`) address translation via `exrpd debug addr` or programmatically, calling Cosmos modules (bank, staking, gov) from an EVM-only setup via REST/gRPC/Tendermint RPC, and using `x/erc20` token pairs to bridge native Cosmos coins with ERC-20s.
 ---
 
 # Cosmos-EVM Interop

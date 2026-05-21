@@ -1,6 +1,6 @@
 ---
 title: EVM Tooling for XRPL EVM
-description: Hardhat, Foundry, ethers.js, viem, web3.js configuration for XRPL EVM mainnet and testnet. RPC URLs, chain IDs, verification setup.
+description: Hardhat, Foundry, ethers.js, viem, web3.js configuration for XRPL EVM mainnet/testnet/devnet — `customChains` for `hardhat-verify` against the Blockscout API, `evmVersion: cancun`, `defineChain` for viem mainnet (until viem ships `xrplevm`), Foundry RPC config, deploy + verify scripts. Solidity version notes.
 ---
 
 # EVM Tooling
@@ -13,16 +13,15 @@ XRPL EVM is fully EIP-155 compatible. Any standard Ethereum tooling works once c
 |---|---|---|---|
 | Mainnet | `1440000` | `https://rpc.xrplevm.org` | `https://explorer.xrplevm.org` |
 | Testnet | `1449000` | `https://rpc.testnet.xrplevm.org` | `https://explorer.testnet.xrplevm.org` |
-| Devnet | `1449900` | (not public; see `network/endpoints.md`) | `https://explorer.devnet.xrplevm.org` |
+| Devnet | `1449900` | `https://rpc.devnet.xrplevm.org` | `https://explorer.devnet.xrplevm.org` |
 
 Currency symbol: `XRP`. Decimals: `18`.
 
 ## Solidity version
 
-- **Now**: pin `solc 0.8.24` — XRPL EVM is on the **Paris** fork via evmOS.
-- **After Cosmos EVM migration**: `solc 0.8.30` and **Prague** fork (transient storage, MCOPY, etc.).
-
-Don't use bleeding-edge `solc` features until the migration lands on your target network.
+- The public mainnet and testnet RPCs execute Cancun-era opcodes (`TLOAD`, `TSTORE`, `MCOPY`, `PUSH0`). The Prague hard fork is **not** active — EIP-2935 system contract at `0x0000F90827F1C53a10cb7A02335B175320002935` has no bytecode.
+- Pin `solc` to a Cancun-capable release (`0.8.24` or newer) and set `evmVersion`/`evm_version` to `cancun`.
+- Avoid Prague-specific primitives until upstream documentation confirms Prague support — blob-related opcodes (`BLOBBASEFEE`, `BLOBHASH`) currently revert on the public RPCs.
 
 ## Hardhat
 
@@ -33,7 +32,10 @@ require("@nomicfoundation/hardhat-verify");
 require("dotenv").config();
 
 module.exports = {
-  solidity: "0.8.24",
+  solidity: {
+    version: "0.8.24",
+    settings: { evmVersion: "cancun" },
+  },
   networks: {
     xrplEVM: {
       url: process.env.XRPL_EVM_URL,           // https://rpc.xrplevm.org
@@ -82,6 +84,7 @@ Verify: `npx hardhat verify --network xrplEVM <ADDRESS> [constructorArgs...]`. T
 ```toml
 # foundry.toml
 solc_version = "0.8.24"
+evm_version = "cancun"
 
 [rpc_endpoints]
 xrplevm         = "https://rpc.xrplevm.org"
@@ -152,10 +155,12 @@ const publicClient = createPublicClient({ chain: xrplEvm, transport: http() });
 const block = await publicClient.getBlock();
 ```
 
-`@reown/appkit/networks` ships `xrplevm` and `xrplevmTestnet` pre-defined, so for wagmi-based apps you can import directly:
+`@reown/appkit/networks` re-exports `viem/chains`. As of 2026-05-21, with the version pin `viem@2.30.0` (see `dapp-dev/social-logins.md`), only `xrplevmTestnet` is shipped; the mainnet `xrplevm` chain was added to `viem` in a later release. For wagmi-based apps targeting testnet you can import directly; for mainnet you must define the chain locally with `defineChain` (snippet above) until you upgrade `viem`:
 
 ```typescript
-import { xrplevm, xrplevmTestnet } from "@reown/appkit/networks";
+import { xrplevmTestnet } from "@reown/appkit/networks";
+// Mainnet: reuse the `xrplEvm` constant defined above via defineChain(...) and
+// pass it to wagmi/Reown alongside xrplevmTestnet.
 ```
 
 ## web3.js (v4)
@@ -186,7 +191,7 @@ Testnet `chainId` hex: `0x161C28` (`1449000`).
 ## Gas notes
 
 - Min tip is 0 by default; the fee market is governed by `x/feemarket`.
-- Block gas limit and per-tx gas behave like standard EVM. `gas-cap` for `eth_call`/`estimateGas` defaults to 25M (`app.toml [json-rpc].gas-cap`).
+- Block gas limit and per-tx gas behave like standard EVM. `gas-cap` (`app.toml [json-rpc].gas-cap`) limits the gas an `eth_call` / `eth_estimateGas` execution can consume; the default is 25M. The RPC does **not** reject requests whose `gas` parameter exceeds this value — the execution is simply capped internally. Reads that would actually need more than 25M gas (deep multicalls, large traversals) fail with out-of-gas. On public RPCs we couldn't observe a request-level rejection at any tested gas value up to `uint64` max as of 2026-05-21; operators can tune this in their own `app.toml`.
 - Use `cast estimate-gas` or `eth_estimateGas` — don't hard-code.
 
 ## See also

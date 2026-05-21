@@ -4,8 +4,8 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Users
 
-- [What is the XRPL EVM?](https://docs.xrplevm.org/pages/users/introduction/what-is-the-xrplevm) — Sovereign Cosmos SDK L1 with EVM module, XRP as native gas, CometBFT consensus, PoA, evmOS → Cosmos EVM migration.
-- [Users overview](https://docs.xrplevm.org/pages/users/index) — Entry page linking to wallet setup, faucet, bridges, ecosystem map.
+- [What is the XRPL EVM?](https://docs.xrplevm.org/pages/users/introduction/what-is-the-xrplevm) — Sovereign Cosmos SDK L1 with EVM module, XRP as native gas, CometBFT consensus, PoA, Cancun-era EVM opcodes available on the public RPCs (TLOAD, TSTORE, MCOPY, PUSH0; Prague EIP-2935 system contract not deployed).
+- [Users overview](https://docs.xrplevm.org/pages/users) — Entry page linking to wallet setup, faucet, bridges, ecosystem map.
 - [Getting Started: Introduction](https://docs.xrplevm.org/pages/users/getting-started/introduction) — How to obtain XRP on XRPL EVM: Gas.zip refuel, Squid, exchange withdrawal, bridge from XRPL, Skip Go from Cosmos.
 - [Install MetaMask](https://docs.xrplevm.org/pages/users/getting-started/install-metamask) — Install and create a MetaMask wallet for EVM-side interaction.
 - [Connect MetaMask to XRPL EVM](https://docs.xrplevm.org/pages/users/getting-started/connect-to-the-xrpl-evm) — Network params: chain ID 1440000 / 1449000, RPC URLs, explorer URLs.
@@ -19,7 +19,7 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Developers — Interacting with EVM
 
-- [Developers overview](https://docs.xrplevm.org/pages/developers/index) — Index to EVM and Cosmos development paths.
+- [Developers overview](https://docs.xrplevm.org/pages/developers) — Index to EVM and Cosmos development paths.
 - [Develop a Smart Contract](https://docs.xrplevm.org/pages/developers/interacting-with-evm/develop-a-smart-contract) — Smart contract intro, tooling (Solidity, Remix, Hardhat, MetaMask).
 - [Deploy the Smart Contract](https://docs.xrplevm.org/pages/developers/interacting-with-evm/deploy-the-smart-contract) — Remix, Hardhat, Foundry deployment walkthroughs with chain IDs and RPC URLs.
 - [Verify the Smart Contract](https://docs.xrplevm.org/pages/developers/interacting-with-evm/verify-the-smart-contract) — Standard JSON input verification on Blockscout-style explorer; Hardhat and Foundry CLI config.
@@ -52,7 +52,7 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Developers — Interacting with Cosmos
 
-- [Introduction](https://docs.xrplevm.org/pages/developers/interacting-with-cosmos/introduction) — Cosmos SDK base layer, evmOS as execution module, CometBFT consensus.
+- [Introduction](https://docs.xrplevm.org/pages/developers/interacting-with-cosmos/introduction) — Cosmos SDK base layer with EVM execution and CometBFT consensus.
 - [Using IBC](https://docs.xrplevm.org/pages/developers/interacting-with-cosmos/using-ibc) — IBC channels for mainnet (Cosmos Hub, Elys, Injective, Osmosis, Noble) and testnet equivalents.
 - [Using the API](https://docs.xrplevm.org/pages/developers/interacting-with-cosmos/using-the-api) — gRPC :9090, REST :1317, CometBFT RPC :26657 with example queries.
 - [Address Translation](https://docs.xrplevm.org/pages/developers/interacting-with-cosmos/advanced-guides/address-translation) — Bech32 (`ethm1...`) ↔ EIP-55 (`0x...`) via `exrpd debug addr` or programmatic conversion.
@@ -65,7 +65,7 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Operators
 
-- [Operators overview](https://docs.xrplevm.org/pages/operators/index) — TOC for node setup, validator, configuration, security.
+- [Operators overview](https://docs.xrplevm.org/pages/operators) — TOC for node setup, validator, configuration, security.
 - [System Requirements](https://docs.xrplevm.org/pages/operators/getting-started/system-requirements) — 8 cores / 32GB RAM / 1TB NVMe / 100Mbps minimum.
 - [Installing the Node](https://docs.xrplevm.org/pages/operators/getting-started/installing-the-node) — `exrpd` install via raw binary, source, Docker, Cosmovisor; snapshot bootstrap; mandatory `evm-chain-id` setting.
 - [Join the XRPL EVM](https://docs.xrplevm.org/pages/operators/getting-started/join-the-xrplevm) — Per-network init steps for Mainnet/Testnet/Devnet.
@@ -98,7 +98,7 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Bridge
 
-- [Bridge overview](https://docs.xrplevm.org/pages/bridge/index) — Axelar + IBC + Wormhole (integrating) as available bridge surfaces.
+- [Bridge overview](https://docs.xrplevm.org/pages/bridge) — Axelar + IBC + Wormhole (integrating) as available bridge surfaces.
 - [General Message Passing](https://docs.xrplevm.org/pages/bridge/general-message-passing) — Axelar GMP from XRPL Payment + memos to `AxelarExecutable` on EVM.
 - [Interchain Transfer](https://docs.xrplevm.org/pages/bridge/interchain-transfer) — Axelar ITS architecture for cross-chain token transfers.
 - [IBC Protocol](https://docs.xrplevm.org/pages/bridge/ibc-protocol) — Native IBC integration, transport vs application layer, channels.
@@ -113,18 +113,18 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Core
 
-- [Core overview](https://docs.xrplevm.org/pages/core/index) — Top-level index for protocol concepts (stub).
+- [Core overview](https://docs.xrplevm.org/pages/core) — Top-level index for protocol concepts (stub).
 - [Technical Architecture](https://docs.xrplevm.org/pages/core/technical-architecture) — Architecture overview (currently a stub).
 - [Concepts: Cosmos SDK](https://docs.xrplevm.org/pages/core/concepts/cosmos-sdk) — Stub.
 - [Concepts: evmOS](https://docs.xrplevm.org/pages/core/concepts/evmos) — Stub.
 - [Concepts: Accounts](https://docs.xrplevm.org/pages/core/concepts/accounts) — Stub.
 - [Concepts: Transactions](https://docs.xrplevm.org/pages/core/concepts/transactions) — Stub.
 - [Concepts: IBC](https://docs.xrplevm.org/pages/core/concepts/ibc) — Stub.
-- [Modules: List](https://docs.xrplevm.org/pages/core/modules/index) — Custom (`x/poa`), Evmos modules, Cosmos modules, IBC modules (mostly stub).
+- [Modules: List](https://docs.xrplevm.org/pages/core/modules) — Custom (`x/poa`), Evmos modules, Cosmos modules, IBC modules (mostly stub).
 - [Modules: Module Accounts](https://docs.xrplevm.org/pages/core/modules/module-accounts) — Stub.
 - [Modules: PoA](https://docs.xrplevm.org/pages/core/modules/poa) — `x/poa` module (stub).
 - [Precompiles](https://docs.xrplevm.org/pages/core/precompiles) — Stub. The XRP sentinel ERC-20 is documented elsewhere.
-- [Security: Index](https://docs.xrplevm.org/pages/core/security/index) — Security landing.
+- [Security: Index](https://docs.xrplevm.org/pages/core/security) — Security landing.
 - [Security: Bugs](https://docs.xrplevm.org/pages/core/security/bugs) — Bug reporting policy.
 - [Security: Audits](https://docs.xrplevm.org/pages/core/security/security-audits) — Audit reports list.
 

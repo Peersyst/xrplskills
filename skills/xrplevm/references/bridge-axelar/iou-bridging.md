@@ -1,6 +1,6 @@
 ---
 title: Bridging XRPL IOUs via Axelar
-description: Move whitelisted XRPL IOUs to and from XRPL EVM. Trustline, allowance, and ITS interchainTransfer mechanics.
+description: Move whitelisted XRPL IOUs (RLUSD and others) to and from XRPL EVM via Axelar ITS — trustline setup on XRPL, allowance/approve on EVM, `interchainTransfer` mechanics, memo encoding for outbound XRPL Payments, 6↔18 decimal scaling per IOU.
 ---
 
 # Bridging XRPL IOUs
@@ -53,6 +53,18 @@ await client.disconnect();
 
 Trustlines are per-account, per-(currency, issuer) pair. Set the `LimitAmount.value` ≥ the maximum you ever expect to hold.
 
+For Axelar-issued XRPL IOUs, important issuer accounts are:
+
+- Mainnet: `rfmS3zqrQrka8wVyhXifEeyTwe8AMz2Yhw`
+- Testnet: `rNrjh1KGZk2jBR3wPfAQnoidtFFYQKbQn2`
+
+Examples from user-provided XRPL account snapshots:
+
+- `USDC.axl` currency code: `555344432E61786C000000000000000000000000`
+- `USDf` currency code: `5553446600000000000000000000000000000000`
+- `WAVAX` currency code: `5741564158000000000000000000000000000000`
+- `mXRP` currency code: `6D58525000000000000000000000000000000000`
+
 ### Step 2 — Approve ITS on XRPL EVM
 
 ```typescript
@@ -85,7 +97,9 @@ await its.interchainTransfer(
 
 Example testnet token IDs from the docs:
 - RLUSD: `0x85f75bb7fd0753565c1d2cb59bd881970b52c6f06f3472769ba7b48621cd9d23`
-- ERC-20 contract for RLUSD on XRPL EVM Testnet: `0x20937978F265DC0C947AA8e136472CFA994FE1eD`
+- ERC-20 contract for RLUSD on XRPL EVM Testnet: **currently inactive** (see warning below).
+
+> **Stale upstream:** as of 2026-05-21, the address `0x20937978F265DC0C947AA8e136472CFA994FE1eD` (listed in the upstream send-tokens guide for testnet RLUSD) returns no bytecode on testnet, and the ITS registration for the RLUSD tokenId (`interchainTokenAddress` / `tokenManagerAddress`) points to addresses that also have no code. Before integrating: call `interchainTokenAddress(0x85f75bb7…)` on the testnet ITS (`0x3b1ca8B18698409fF95e29c506ad7014980F0193`) and check `eth_getCode` of the returned address, or search "RLUSD" on https://testnet.axelarscan.io → Interchain Tokens.
 
 These are testnet-only. For mainnet token IDs/addresses, query Axelarscan or `InterchainTokenFactory.canonicalInterchainTokenId`.
 
@@ -103,3 +117,5 @@ These are testnet-only. For mainnet token IDs/addresses, query Axelarscan or `In
 - https://docs.xrplevm.org/pages/users/using-the-bridge/transfer-iou-with-axelar
 - https://docs.xrplevm.org/pages/developers/interacting-with-evm/advanced-guides/cross-chain-transactions/send-tokens
 - https://docs.axelar.dev/dev/send-tokens/interchain-tokens/intro/
+- https://xrpscan.com/account/rfmS3zqrQrka8wVyhXifEeyTwe8AMz2Yhw
+- https://xrpscan.com/account/rNrjh1KGZk2jBR3wPfAQnoidtFFYQKbQn2

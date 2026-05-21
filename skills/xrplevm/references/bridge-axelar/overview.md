@@ -1,6 +1,6 @@
 ---
 title: Axelar Bridge Overview
-description: Axelar GMP + ITS architecture for XRPL EVM, deployed contract addresses per network, chain IDs.
+description: Axelar architecture on XRPL EVM — General Message Passing (GMP) and Interchain Token Service (ITS), deployed contract addresses (Gateway, GasService, InterchainTokenService, InterchainTokenFactory) per network, Axelar chain IDs (`xrpl`, `xrpl-evm`), XRP token ID, AxelarExecutable implementation pattern, XRPL Payment+memo encoding, GMP transaction lifecycle.
 ---
 
 # Axelar Bridge Overview
@@ -109,7 +109,7 @@ End-to-end XRPL → XRPL EVM via Axelar Amplifier is typically **1–2 minutes**
 
 ## See also
 
-- https://docs.xrplevm.org/pages/bridge/index
+- https://docs.xrplevm.org/pages/bridge
 - https://docs.xrplevm.org/pages/bridge/general-message-passing
 - https://docs.xrplevm.org/pages/bridge/interchain-transfer
 - https://docs.xrplevm.org/pages/bridge/deployed-contracts-mainnet

@@ -1,6 +1,6 @@
 ---
 title: Cosmos EVM vs XRPL EVM
-description: How XRPL EVM differs from a vanilla Cosmos EVM chain — XRP as native gas, 6 to 18 decimal scaling, PoA consensus, evmOS to Cosmos EVM migration.
+description: How XRPL EVM differs from a vanilla Cosmos EVM chain — sovereign Cosmos SDK L1, CometBFT consensus, Proof of Authority (`x/poa`) instead of PoS, XRP as native gas with 18-decimal `axrp` denom (6↔18 scaling against XRPL drops), Cancun-era EVM opcodes (TLOAD, TSTORE, MCOPY, PUSH0) active on public RPCs, Axelar (not XRPL UNL) for XRPL connectivity.
 ---
 
 # Cosmos EVM vs XRPL EVM
@@ -13,7 +13,7 @@ XRPL EVM is a sovereign Layer-1 Cosmos SDK chain with an EVM execution module. I
 |---|---|
 | Consensus | CometBFT (Tendermint BFT) — deterministic finality, ~5s block time |
 | App framework | Cosmos SDK |
-| EVM execution | evmOS (legacy, Paris fork, `solc` ≤ 0.8.24) → migrating to Cosmos EVM (Prague fork, `solc` 0.8.30) |
+| EVM execution | Cosmos EVM (Cancun opcodes active on mainnet/testnet — TLOAD/TSTORE, MCOPY, PUSH0 verified via state-override `eth_call`; EIP-2935 system contract for Prague is **not** deployed at `0x0000F90827F1C53a10cb7A02335B175320002935`, so target Cancun not Prague) |
 | Validator model | Proof of Authority (PoA), `x/poa` module |
 | Native gas token | XRP |
 | Interop | Axelar (GMP + ITS) + IBC |
@@ -57,7 +57,9 @@ The `erc20` module bridges Cosmos-native tokens (IBC-arrived, Cosmos coins) to E
 
 ### 6. EVM fork level
 
-Currently **Paris**; migrating to **Prague**. This means newer EVM opcodes (e.g. transient storage, MCOPY) are only available after the Cosmos-EVM migration. Pin `solc` to `0.8.24` until the upgrade.
+Cancun-era opcodes are observable on the public mainnet and testnet RPCs as of 2026-05-21: `TLOAD` / `TSTORE` (transient storage), `MCOPY`, and `PUSH0` all execute successfully via state-override `eth_call`. Blob-related paths (`BLOBBASEFEE`, `BLOBHASH`) currently revert with `nil pointer dereference`, so don't rely on blob primitives.
+
+The Prague hard fork is **not** active on the public RPCs: the EIP-2935 history-storage system contract at `0x0000F90827F1C53a10cb7A02335B175320002935` returns no bytecode on either network. Target Cancun (not Prague) in `solc` until upstream documentation confirms otherwise — compile with `evm_version = "cancun"` and avoid features that require Prague (`BLOBHASH`, EIP-7702, etc.).
 
 ## Block time and finality
 

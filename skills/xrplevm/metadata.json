@@ -2,7 +2,7 @@
   "name": "xrplevm",
   "version": "0.1.0",
   "organization": "Peersyst",
-  "date": "2026-05-20",
+  "date": "2026-05-21",
   "type": "knowledge",
   "abstract": "Knowledge skill for the XRPL EVM sidechain — a sovereign Cosmos SDK Layer-1 with EVM execution, XRP as native gas (18 decimals), PoA consensus via CometBFT, bridged to XRPL via Axelar. Covers network endpoints and chain IDs, exrpd node operation, EVM tooling (Hardhat, Foundry, ethers, viem), XRPL-EVM-specific Solidity gotchas, Axelar GMP and ITS bridging (XRP, ERC-20, XRPL IOUs), IBC channels to Cosmos chains, Squid and Skip Go widgets, Band oracles, Goldsky indexing, wallets (MetaMask, Keplr, Reown), and the .xrpl domain ZNS registry. All technical content sourced from docs.xrplevm.org.",
   "source": "https://docs.xrplevm.org",
@@ -30,7 +30,7 @@
     {
       "path": "references/architecture/cosmos-evm-vs-xrplevm.md",
       "title": "Cosmos EVM vs XRPL EVM",
-      "description": "Stack summary, PoA model, decimal handling, evmOS to Cosmos EVM migration."
+      "description": "Stack summary, PoA model, decimal handling, and current Cancun-fork behavior (Prague EIP-2935 not deployed)."
     },
     {
       "path": "references/architecture/exrpd-node.md",
@@ -95,12 +95,12 @@
     {
       "path": "references/tokens/supported.md",
       "title": "Supported Tokens",
-      "description": "Token catalog by origin: native, XRPL IOU, EVM-bridged, IBC."
+      "description": "Token catalog from xrplevm-tvl assets list, grouped by origin and address."
     },
     {
       "path": "references/tokens/stablecoins.md",
       "title": "Stablecoins",
-      "description": "RLUSD testnet address; lookup paths for mainnet stablecoins."
+      "description": "Stablecoin addresses tracked in xrplevm-tvl, plus RLUSD integration notes."
     },
     {
       "path": "references/dapp-dev/evm-tooling.md",
@@ -110,7 +110,7 @@
     {
       "path": "references/dapp-dev/solidity-on-xrplevm.md",
       "title": "Solidity on XRPL EVM",
-      "description": "XRPL-EVM-specific Solidity gotchas — Paris fork, 18-decimal XRP, sentinel limits."
+      "description": "XRPL-EVM-specific Solidity gotchas — Cancun opcodes active, 18-decimal XRP, sentinel limits."
     },
     {
       "path": "references/dapp-dev/wallets.md",

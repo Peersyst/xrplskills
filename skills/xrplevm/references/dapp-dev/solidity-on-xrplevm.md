@@ -1,6 +1,6 @@
 ---
 title: Solidity on XRPL EVM
-description: XRPL-EVM-specific Solidity gotchas — XRP decimal handling, EVM fork level, precompile call limit, address translation considerations.
+description: Solidity gotchas specific to XRPL EVM — 18-decimal XRP (vs. 6 drops on XRPL), `axrp` / `drops` conversion, Cancun-era opcodes active (TLOAD, TSTORE, MCOPY, PUSH0; blob-related ops revert), set `evmVersion: cancun` in solc, native XRP sentinel ERC-20 at `0xEee...EEeE`, precompile/sentinel call limits, address translation considerations from contracts.
 ---
 
 # Solidity on XRPL EVM
@@ -18,21 +18,17 @@ Don't deploy a 6-decimal "XRP-token" pool — you'll fragment liquidity and brea
 
 When XRP is bridged out to XRPL via Axelar ITS, the node truncates to 6-decimal drops. Amounts not divisible to whole drops lose precision on the XRPL side. If precision matters, work in multiples of `1e12` axrp (one drop) on the EVM side.
 
-## 2. Pin solc to 0.8.24
+## 2. Target the Cancun EVM fork
 
-XRPL EVM is on the **Paris** EVM fork (via evmOS). New opcodes from Shanghai/Cancun/Prague are **not** available yet:
+As of 2026-05-21, the public mainnet and testnet RPCs execute Cancun-era opcodes — `TLOAD` / `TSTORE` (transient storage), `MCOPY`, and `PUSH0` all run successfully via state-override `eth_call`. Blob-related opcodes (`BLOBBASEFEE`, `BLOBHASH`) currently revert with `nil pointer dereference`, and the Prague EIP-2935 system contract at `0x0000F90827F1C53a10cb7A02335B175320002935` is **not** deployed — target Cancun, not Prague.
 
-- `PUSH0` (Shanghai) — generally fine, supported in solc 0.8.20+ with `--evm-version paris`.
-- `MCOPY`, transient storage (Cancun) — **not available**.
-- `BLOBHASH`, `BLOBBASEFEE` — **not available**.
-
-Set `solc_version = "0.8.24"` and either omit `evm_version` (defaults to Paris in 0.8.24) or set it explicitly:
+Pin `solc` to a release that supports Cancun (`0.8.24` is the first; pick the latest stable your toolchain ships) and set `evm_version = "cancun"`:
 
 ```toml
 # foundry.toml
 [profile.default]
 solc_version = "0.8.24"
-evm_version  = "paris"
+evm_version  = "cancun"
 ```
 
 Hardhat:
@@ -40,17 +36,19 @@ Hardhat:
 ```js
 solidity: {
   version: "0.8.24",
-  settings: { evmVersion: "paris" },
+  settings: { evmVersion: "cancun" },
 },
 ```
 
-The chain is migrating to **Cosmos EVM** with Prague fork and `solc 0.8.30`. Once your target network has migrated (check [networks page](https://docs.xrplevm.org/pages/operators/resources/networks)), you can move to newer opcodes.
+Avoid Prague-specific primitives (`BLOBHASH`, EIP-7702 auth lists) until the public RPCs confirm Prague is active.
 
-## 3. The sentinel precompile has a per-block call limit
+## 3. The sentinel XRP ERC-20 has a documented per-block call limit (legacy claim — re-verify before depending on it)
 
-The XRP ERC-20 at `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` is implemented as a precompile, not bytecode. There is a hard limit of **7 calls to this address per block per execution path**. Long aggregator routes that touch it more than 7 times will revert.
+The XRP ERC-20 at `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` is a real deployed contract (`ERC20MinterBurnerDecimals` pattern, registered by the `x/erc20` module); `eth_getCode` returns ~27 KB of bytecode as of 2026-05-21. See `architecture/precompiles-and-wxrp.md` for details.
 
-For simple swap routes, the sentinel is fine and saves gas. If you hit the limit, structure the route to interact with XRP via an alternative pool/path rather than calling the sentinel repeatedly.
+Legacy guidance from the XRPL EVM team states there is a hard limit of **7 calls to this address per block per execution path**, after which long aggregator routes that touch it more than 7 times will revert. This claim was **not re-verified empirically** in the 2026-05-21 audit — treat it as inherited guidance and run a small benchmark (e.g. 10× `transfer`/`balanceOf` in one tx) on your target network before relying on the limit for routing decisions.
+
+For simple swap routes, the sentinel ERC-20 behaves like any deployed ERC-20 and is fine. If you observe the limit firing in practice, structure the route to interact with XRP via an alternative pool/path rather than calling the sentinel repeatedly.
 
 ## 4. Address checksumming
 
@@ -60,14 +58,14 @@ XRPL EVM uses standard EIP-55 checksums. The same 20-byte AccountID also has a B
 
 When sending to XRPL via Axelar ITS, the recipient r-address must be converted to its 20-byte hex form before being passed to `interchainTransfer`. See `bridge-axelar/xrp.md`.
 
-## 5. Precompile addresses
+## 5. Precompile addresses (and what `0xEee…EEeE` actually is)
 
-The `0xEeee...EEeE` XRP sentinel is the only documented XRPL-EVM-specific precompile address. Cosmos EVM ships additional precompiles (staking, bank, distribution, IBC at conventional addresses), but the XRPL EVM precompile inventory is not fully documented at https://docs.xrplevm.org/pages/core/precompiles (currently a stub). Verify in the [xrplevm/node source](https://github.com/xrplevm/node) before depending on a specific Cosmos EVM precompile address.
+The `0xEeee...EEeE` XRP sentinel is **not** an EVM precompile — it is a real deployed contract at a sentinel address (see `architecture/precompiles-and-wxrp.md`). The Cosmos EVM stack ships actual precompiles (staking, bank, distribution, IBC) at conventional addresses; those are intercepted by the node and have no bytecode. The XRPL EVM precompile inventory is not fully documented at https://docs.xrplevm.org/pages/core/precompiles (currently a stub). Verify in the [xrplevm/node source](https://github.com/xrplevm/node) before depending on a specific Cosmos EVM precompile address.
 
 ## 6. Gas
 
-- Minimum gas price is set by validators (`minimum-gas-prices` in `app.toml`). The default template uses `0axrp`, but live validators usually require a non-zero tip.
-- `eth_estimateGas` and `eth_call` are capped at 25M gas by default (`gas-cap` in `app.toml [json-rpc]`).
+- Minimum gas price is set by validators (`minimum-gas-prices` in `app.toml`). The default template uses `0axrp`, but live validators usually require a non-zero tip — `eth_gasPrice` on the public RPCs returns roughly 1.37x the base fee.
+- `gas-cap` (`app.toml [json-rpc].gas-cap`) limits the gas an `eth_call` / `eth_estimateGas` execution can consume; the default is 25M. The RPC does **not** reject requests whose `gas` parameter exceeds this value — the execution is simply capped internally. Reads that would actually require more than 25M gas (deep multicalls, large traversals) fail with out-of-gas. On public RPCs we couldn't observe a request-level rejection at any tested gas value up to `uint64` max as of 2026-05-21; operators can tune this in their own `app.toml`.
 - Block gas limit follows standard EVM semantics.
 
 ## 7. Tx replay protection

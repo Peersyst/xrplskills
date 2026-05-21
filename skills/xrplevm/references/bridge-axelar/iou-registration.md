@@ -1,6 +1,6 @@
 ---
 title: Registering an XRPL IOU with Axelar ITS
-description: Process for whitelisting and registering an XRPL issued currency with Axelar's Interchain Token Service so it can be bridged to XRPL EVM.
+description: Whitelisting and registering an XRPL issued currency (IOU) with Axelar ITS so it can be bridged to XRPL EVM — Axelar Amplifier governance process, currency code + issuer pair, decimal scaling decisions (6 on XRPL ↔ N on EVM), `InterchainTokenFactory` deployment, post-registration checks.
 ---
 
 # IOU Registration with Axelar ITS
@@ -34,10 +34,18 @@ You don't need to register anything yourself if the IOU is already known to ITS.
 ```typescript
 const factory = new Contract(FACTORY_ADDR, FACTORY_ABI, provider);
 const tokenId = await factory.canonicalInterchainTokenId(originalIssuerAndCurrency);
-const evmAddr = await its.tokenAddress(tokenId);
+
+// For canonical/registered tokens (e.g. XRP):
+const registeredAddr = await its.registeredTokenAddress(tokenId);
+// For interchain tokens deployed by InterchainTokenFactory (e.g. IOUs):
+const interchainAddr = await its.interchainTokenAddress(tokenId);
+
+// Always verify the result has bytecode before integrating:
+const code = await provider.getCode(interchainAddr);
+if (code === "0x") throw new Error("Token ERC-20 not deployed at this address");
 ```
 
-If `evmAddr` is non-zero, the IOU is registered and bridgeable. Token IDs and ERC-20 addresses are also browsable at https://axelarscan.io (mainnet) and https://testnet.axelarscan.io.
+The direct `tokenAddress(bytes32)` selector (`0x97bb3ce9`) **reverts** on the ITS contracts deployed on XRPL EVM mainnet and testnet — use `registeredTokenAddress` (for tokens registered via `InterchainTokenFactory.registerCanonical*`, including XRP) or `interchainTokenAddress` (for tokens deployed via `InterchainTokenFactory.deployInterchainToken*`, including IOUs). Token IDs and ERC-20 addresses are also browsable at https://axelarscan.io (mainnet) and https://testnet.axelarscan.io.
 
 ## Decimal alignment
 
