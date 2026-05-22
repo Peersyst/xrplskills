@@ -1,6 +1,6 @@
 ---
 name: xrpl-go
-description: Apply opinionated rules and security patterns to Go code that uses the Peersyst/xrpl-go client library to interact with the XRP Ledger. Use when users want to write a new XRPL integration in Go, review or refactor existing xrpl-go code, sign or submit a transaction, construct or credit a payment, subscribe to ledger or transaction streams, work with issued currencies, AMM, NFToken, escrow, or payment channels, query account or ledger state, or audit an xrpl-go integration for security issues like partial-payment inflation, missing LastLedgerSequence, missing DestinationTag, or unsafe key management.
+description: "Apply opinionated rules and security patterns to Go code that uses the Peersyst/xrpl-go client library to interact with the XRP Ledger. Use when users want to write a new XRPL integration in Go, review or refactor existing xrpl-go code, sign or submit a transaction, construct or credit a payment, subscribe to ledger or transaction streams, work with issued currencies, AMM, NFToken, escrow, or payment channels, query account or ledger state, or audit an xrpl-go integration for security issues like partial-payment inflation, missing LastLedgerSequence, missing DestinationTag, or unsafe key management."
 license: MIT
 metadata:
   author: Peersyst
