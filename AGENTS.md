@@ -129,7 +129,7 @@ Add the skill to project knowledge or paste `SKILL.md` contents into the convers
 
 ## Landing Page
 
-`landing/` hosts the public-facing site for this repo. The framework has not been picked yet — see `TODO.md`.
+`landing/` hosts the public-facing site for this repo.
 
 ---
 
