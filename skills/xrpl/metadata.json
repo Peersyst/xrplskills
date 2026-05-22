@@ -2,10 +2,15 @@
   "version": "0.1.0",
   "organization": "Peersyst",
   "date": "May 2026",
-  "abstract": "Reference and patterns for the xrpl.js JavaScript/TypeScript client library. Covers Client, Wallet, transaction autofill/sign/submit, models, utilities, and common XRPL flows in Node.js and the browser.",
+  "abstract": "Opinionated rules and security patterns for JavaScript and TypeScript code that uses the xrpl.js client library to interact with the XRP Ledger. Covers security-critical flows (partial payments, validated meta, LastLedgerSequence, DestinationTag), amounts and precision, Client lifecycle, Wallet and signing, transaction submission, and paginated reads.",
+  "validated_against": {
+    "xrpl_js": "main as of 2026-05-20",
+    "xrpl_js_repo": "https://github.com/XRPLF/xrpl.js"
+  },
   "references": [
     "https://js.xrpl.org/",
     "https://github.com/XRPLF/xrpl.js",
-    "https://xrpl.org/docs"
+    "https://xrpl.org/docs",
+    "https://github.com/XRPLF/xrpl-dev-portal/tree/master/_code-samples"
   ]
 }
