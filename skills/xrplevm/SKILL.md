@@ -1,11 +1,11 @@
 ---
 name: xrplevm
-description: "Reference for the XRPL EVM sidechain — a Cosmos SDK L1 with EVM execution, XRP as native gas (axrp, 18 decimals), bridged to XRPL via Axelar. Trigger on: XRPL EVM, exrpd, Cosmos EVM/evmOS, x/poa, x/erc20, Axelar GMP/ITS, 0xEee XRP precompile, chain ID 1440000/1449000, Squid/Skip Go widgets, Goldsky subgraphs, Band oracles (StdReferenceProxy, Tunnel/TSS), MetaMask/Keplr/Reown/Privy on XRPL EVM, IBC channels, bridging XRP/IOU/RLUSD, drops↔axrp conversion."
+description: "Reference for the XRPL EVM sidechain — a Cosmos SDK chain with EVM execution, XRP as native gas (axrp, 18 decimals), bridged to XRPL via Axelar. Trigger on: XRPL EVM, exrpd, Cosmos EVM/evmOS, x/poa, x/erc20, Axelar GMP/ITS, 0xEee XRP precompile, chain ID 1440000/1449000, Squid/Skip Go widgets, Goldsky subgraphs, Band oracles (StdReferenceProxy, Tunnel/TSS), MetaMask/Keplr/Reown/Privy on XRPL EVM, IBC channels, bridging XRP/IOU/RLUSD, drops↔axrp conversion."
 ---
 
 # xrplevm
 
-Knowledge skill for the XRPL EVM sidechain — a sovereign Cosmos SDK Layer-1 with full EVM execution, built by Peersyst with Ripple. Native gas is XRP at 18 decimals. Connectivity to XRPL is via Axelar; connectivity to Cosmos chains is via IBC; connectivity to other EVM chains is via Axelar.
+Knowledge skill for the XRPL EVM sidechain — a sovereign Cosmos SDK chain with full EVM execution, built by Peersyst with Ripple. Native gas is XRP at 18 decimals. Connectivity to XRPL is via Axelar; connectivity to Cosmos chains is via IBC; connectivity to other EVM chains is via Axelar.
 
 ## How to Use
 

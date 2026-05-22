@@ -4,7 +4,7 @@ Complete listing of pages on https://docs.xrplevm.org grouped by section. One li
 
 ## Users
 
-- [What is the XRPL EVM?](https://docs.xrplevm.org/pages/users/introduction/what-is-the-xrplevm) — Sovereign Cosmos SDK L1 with EVM module, XRP as native gas, CometBFT consensus, PoA, Cancun-era EVM opcodes available on the public RPCs (TLOAD, TSTORE, MCOPY, PUSH0; Prague EIP-2935 system contract not deployed).
+- [What is the XRPL EVM?](https://docs.xrplevm.org/pages/users/introduction/what-is-the-xrplevm) — Sovereign Cosmos SDK sidechain with EVM module, XRP as native gas, CometBFT consensus, PoA, Cancun-era EVM opcodes available on the public RPCs (TLOAD, TSTORE, MCOPY, PUSH0; Prague EIP-2935 system contract not deployed).
 - [Users overview](https://docs.xrplevm.org/pages/users) — Entry page linking to wallet setup, faucet, bridges, ecosystem map.
 - [Getting Started: Introduction](https://docs.xrplevm.org/pages/users/getting-started/introduction) — How to obtain XRP on XRPL EVM: Gas.zip refuel, Squid, exchange withdrawal, bridge from XRPL, Skip Go from Cosmos.
 - [Install MetaMask](https://docs.xrplevm.org/pages/users/getting-started/install-metamask) — Install and create a MetaMask wallet for EVM-side interaction.

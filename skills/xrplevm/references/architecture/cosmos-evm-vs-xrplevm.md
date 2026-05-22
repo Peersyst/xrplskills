@@ -1,11 +1,11 @@
 ---
 title: Cosmos EVM vs XRPL EVM
-description: How XRPL EVM differs from a vanilla Cosmos EVM chain — sovereign Cosmos SDK L1, CometBFT consensus, Proof of Authority (`x/poa`) instead of PoS, XRP as native gas with 18-decimal `axrp` denom (6↔18 scaling against XRPL drops), Cancun-era EVM opcodes (TLOAD, TSTORE, MCOPY, PUSH0) active on public RPCs, Axelar (not XRPL UNL) for XRPL connectivity.
+description: How XRPL EVM differs from a vanilla Cosmos EVM chain — sovereign Cosmos SDK sidechain, CometBFT consensus, Proof of Authority (`x/poa`) instead of PoS, XRP as native gas with 18-decimal `axrp` denom (6↔18 scaling against XRPL drops), Cancun-era EVM opcodes (TLOAD, TSTORE, MCOPY, PUSH0) active on public RPCs, Axelar (not XRPL UNL) for XRPL connectivity.
 ---
 
 # Cosmos EVM vs XRPL EVM
 
-XRPL EVM is a sovereign Layer-1 Cosmos SDK chain with an EVM execution module. It is **not** an XRPL-protocol sidechain in the consensus sense — its security comes from CometBFT validators, not from XRPL UNL. XRPL connectivity is provisioning-only, via Axelar.
+XRPL EVM is a sovereign Cosmos SDK sidechain with an EVM execution module. It is **not** part of the XRPL protocol's consensus — its security comes from CometBFT validators, not from XRPL UNL. XRPL connectivity is provisioning-only, via Axelar.
 
 ## Stack summary
 

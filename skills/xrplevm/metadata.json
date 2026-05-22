@@ -4,7 +4,7 @@
   "organization": "Peersyst",
   "date": "2026-05-21",
   "type": "knowledge",
-  "abstract": "Knowledge skill for the XRPL EVM sidechain — a sovereign Cosmos SDK Layer-1 with EVM execution, XRP as native gas (18 decimals), PoA consensus via CometBFT, bridged to XRPL via Axelar. Covers network endpoints and chain IDs, exrpd node operation, EVM tooling (Hardhat, Foundry, ethers, viem), XRPL-EVM-specific Solidity gotchas, Axelar GMP and ITS bridging (XRP, ERC-20, XRPL IOUs), IBC channels to Cosmos chains, Squid and Skip Go widgets, Band oracles, Goldsky indexing, wallets (MetaMask, Keplr, Reown), and the .xrpl domain ZNS registry. All technical content sourced from docs.xrplevm.org.",
+  "abstract": "Knowledge skill for the XRPL EVM sidechain — a sovereign Cosmos SDK chain with EVM execution, XRP as native gas (18 decimals), PoA consensus via CometBFT, bridged to XRPL via Axelar. Covers network endpoints and chain IDs, exrpd node operation, EVM tooling (Hardhat, Foundry, ethers, viem), XRPL-EVM-specific Solidity gotchas, Axelar GMP and ITS bridging (XRP, ERC-20, XRPL IOUs), IBC channels to Cosmos chains, Squid and Skip Go widgets, Band oracles, Goldsky indexing, wallets (MetaMask, Keplr, Reown), and the .xrpl domain ZNS registry. All technical content sourced from docs.xrplevm.org.",
   "source": "https://docs.xrplevm.org",
   "references": [
     {
