@@ -110,7 +110,7 @@ The `StdReferenceProxy` pattern above is the right choice for the supported pric
 
 ### Pipeline shape
 
-```
+```text
 Custom Data Source (Python on BandChain) ──┐
 Custom Data Source ........................├──► Oracle Script (Rust/Wasm) ──► BandChain consensus
 Custom Data Source ........................┘                                       │
@@ -200,7 +200,7 @@ A common pattern: instead of putting the full payload through BandChain (expensi
 
 ### Operational env vars
 
-```
+```bash
 BAND_GRPC_URL=https://...                  # BandChain endpoint (testnet/mainnet)
 BAND_MNEMONIC=...                          # BandChain signer (DS owner / OS deployer)
 TSS_VERIFIER=0x9dd8fC6A9D4e3f74Dd578e2d789898A838Ef4888   # XRPL EVM testnet
