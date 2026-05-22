@@ -1,6 +1,6 @@
 ---
 title: EVM Tooling for XRPL EVM
-description: Hardhat, Foundry, ethers.js, viem, web3.js configuration for XRPL EVM mainnet/testnet/devnet — `customChains` for `hardhat-verify` against the Blockscout API, `evmVersion: cancun`, `defineChain` for viem mainnet (until viem ships `xrplevm`), Foundry RPC config, deploy + verify scripts. Solidity version notes.
+description: "Hardhat, Foundry, ethers.js, viem, web3.js configuration for XRPL EVM mainnet/testnet/devnet — `customChains` for `hardhat-verify` against the Blockscout API, `evmVersion: cancun`, `defineChain` for viem mainnet (until viem ships `xrplevm`), Foundry RPC config, deploy + verify scripts. Solidity version notes."
 ---
 
 # EVM Tooling

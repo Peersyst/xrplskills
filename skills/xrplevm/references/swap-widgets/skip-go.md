@@ -1,6 +1,6 @@
 ---
 title: Skip Go Widget on XRPL EVM
-description: Embed the Skip Go widget (`@skip-go/widget`) for Cosmos-source IBC routes into XRPL EVM — React `<Widget />` and Web Component flavours, `defaultRoute` to `xrplevm_1440000-1` / denom `axrp`, `routeConfig` with `bridges: ['IBC']`, theming, callbacks, validation checklist.
+description: "Embed the Skip Go widget (`@skip-go/widget`) for Cosmos-source IBC routes into XRPL EVM — React `<Widget />` and Web Component flavours, `defaultRoute` to `xrplevm_1440000-1` / denom `axrp`, `routeConfig` with `bridges: ['IBC']`, theming, callbacks, validation checklist."
 ---
 
 # Skip Go Widget

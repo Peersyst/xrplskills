@@ -13,9 +13,12 @@
     "landing"
   ],
   "scripts": {
-    "build:skills": "pnpm --filter skills-build build",
-    "test:skills": "pnpm --filter skills-build test",
-    "tokens": "pnpm --filter skills-build tokens"
+    "validate:frontmatter": "node scripts/validate-frontmatter.mjs",
+    "build:xrpl-standards": "pnpm --filter skills-build build:xrpl-standards",
+    "test:xrpl-standards": "pnpm --filter skills-build test:xrpl-standards"
+  },
+  "devDependencies": {
+    "yaml": "^2.8.2"
   },
   "packageManager": "pnpm@9.0.0"
 }

@@ -1,6 +1,6 @@
 ---
 title: Solidity on XRPL EVM
-description: Solidity gotchas specific to XRPL EVM — 18-decimal XRP (vs. 6 drops on XRPL), `axrp` / `drops` conversion, Cancun-era opcodes active (TLOAD, TSTORE, MCOPY, PUSH0; blob-related ops revert), set `evmVersion: cancun` in solc, native XRP sentinel ERC-20 at `0xEee...EEeE`, precompile/sentinel call limits, address translation considerations from contracts.
+description: "Solidity gotchas specific to XRPL EVM — 18-decimal XRP (vs. 6 drops on XRPL), `axrp` / `drops` conversion, Cancun-era opcodes active (TLOAD, TSTORE, MCOPY, PUSH0; blob-related ops revert), set `evmVersion: cancun` in solc, native XRP sentinel ERC-20 at `0xEee...EEeE`, precompile/sentinel call limits, address translation considerations from contracts."
 ---
 
 # Solidity on XRPL EVM

@@ -1,6 +1,6 @@
 ---
 name: xrpl
-description: Apply opinionated rules and security patterns to JavaScript and TypeScript code that uses the xrpl.js client library to interact with the XRP Ledger. Use when users want to write a new XRPL integration with xrpl.js, review or refactor existing xrpl.js code, sign or submit a transaction, construct or credit a payment, work with issued currencies, AMM, NFToken, escrow, or payment channels, query account or ledger state, or audit an XRPL integration for security issues like partial-payment inflation, missing LastLedgerSequence, missing DestinationTag, or unsafe key management.
+description: "Apply opinionated rules and security patterns to JavaScript and TypeScript code that uses the xrpl.js client library to interact with the XRP Ledger. Use when users want to write a new XRPL integration with xrpl.js, review or refactor existing xrpl.js code, sign or submit a transaction, construct or credit a payment, work with issued currencies, AMM, NFToken, escrow, or payment channels, query account or ledger state, or audit an XRPL integration for security issues like partial-payment inflation, missing LastLedgerSequence, missing DestinationTag, or unsafe key management."
 license: MIT
 metadata:
   author: Peersyst
