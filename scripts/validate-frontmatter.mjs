@@ -10,7 +10,7 @@
  */
 
 import { readdir, readFile, stat } from 'node:fs/promises'
-import { dirname, join, relative, resolve } from 'node:path'
+import { basename, dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseDocument } from 'yaml'
 
@@ -18,7 +18,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const SKILLS_DIR = join(REPO_ROOT, 'skills')
 
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
-const QUOTED_DESCRIPTION_RE = /^description:\s*"[^"\n]*"\s*$/m
+const QUOTED_DESCRIPTION_RE = /^description:\s*"(?:[^"\\\n]|\\.)*"\s*$/m
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true })
@@ -41,7 +41,7 @@ async function main() {
   for (const file of files) {
     const content = await readFile(file, 'utf-8')
     const match = content.match(FRONTMATTER_RE)
-    const isSkillFile = file.endsWith(`${'/'}SKILL.md`)
+    const isSkillFile = basename(file) === 'SKILL.md'
     const rel = relative(REPO_ROOT, file)
 
     if (!match) {
